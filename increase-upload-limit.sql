@@ -1,3 +1,3 @@
 UPDATE storage.buckets
-SET file_size_limit = 262144000
+SET file_size_limit = 2147483648
 WHERE id = 'birthday-media';

@@ -11,6 +11,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/tus-js-client@4.3.1/dist/tus.min.js"></script>
   </head>
   <body>
     <main class="page sender-page">
@@ -79,7 +80,7 @@
       const form = document.getElementById("wishForm");
       const status = document.getElementById("formStatus");
       const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
-      const MAX_VIDEO_BYTES = 250 * 1024 * 1024;
+      const MAX_VIDEO_BYTES = 2 * 1024 * 1024 * 1024;
 
       async function submitToApi(payload, isFormData = false) {
         const endpoints = ["/api", "api.php"];
@@ -101,7 +102,7 @@
         return null;
       }
 
-      async function uploadDirectFile(file, kind) {
+      async function createUpload(file, kind) {
         const apiResult = await submitToApi({
           action: "createUploadUrl",
           kind,
@@ -114,17 +115,50 @@
           throw new Error(apiResult?.result?.error || "Could not prepare upload.");
         }
 
-        const uploadResponse = await fetch(apiResult.result.uploadUrl, {
-          method: "PUT",
-          headers: { "Content-Type": file.type || "application/octet-stream" },
-          body: file,
+        return apiResult.result;
+      }
+
+      async function uploadResumableFile(file, kind) {
+        const upload = await createUpload(file, kind);
+        const endpoint = `https://${upload.projectId}.storage.supabase.co/storage/v1/upload/resumable`;
+        const label = kind === "photo" ? "picture" : "video";
+
+        return new Promise((resolve, reject) => {
+          const tusUpload = new tus.Upload(file, {
+            endpoint,
+            retryDelays: [0, 3000, 5000, 10000, 20000],
+            headers: {
+              "x-signature": upload.token,
+              "x-upsert": "false",
+            },
+            uploadDataDuringCreation: true,
+            removeFingerprintOnSuccess: true,
+            chunkSize: 6 * 1024 * 1024,
+            metadata: {
+              bucketName: upload.bucket,
+              objectName: upload.objectPath,
+              contentType: file.type || "application/octet-stream",
+              cacheControl: "3600",
+            },
+            onError(error) {
+              reject(error);
+            },
+            onProgress(bytesUploaded, bytesTotal) {
+              const percent = Math.max(1, Math.round((bytesUploaded / bytesTotal) * 100));
+              status.textContent = `Uploading ${label}... ${percent}% complete. Please keep this page open.`;
+            },
+            onSuccess() {
+              resolve(upload.publicUrl);
+            },
+          });
+
+          tusUpload.findPreviousUploads().then((previousUploads) => {
+            if (previousUploads.length) {
+              tusUpload.resumeFromPreviousUpload(previousUploads[0]);
+            }
+            tusUpload.start();
+          });
         });
-
-        if (!uploadResponse.ok) {
-          throw new Error("Upload failed. Please try a smaller or different file.");
-        }
-
-        return apiResult.result.publicUrl;
       }
 
       form.addEventListener("submit", async (event) => {
@@ -142,7 +176,7 @@
         }
 
         if (videoFile && videoFile.size > MAX_VIDEO_BYTES) {
-          status.textContent = "The video is too large. Please choose or compress a video under 250 MB.";
+          status.textContent = "The video is too large. Please choose or compress a video under 2 GB.";
           status.classList.add("form-status--error");
           return;
         }
@@ -153,12 +187,12 @@
 
           if (photoFile) {
             status.textContent = "Uploading picture...";
-            photoPath = await uploadDirectFile(photoFile, "photo");
+            photoPath = await uploadResumableFile(photoFile, "photo");
           }
 
           if (videoFile) {
             status.textContent = "Uploading video... Please keep this page open.";
-            videoPath = await uploadDirectFile(videoFile, "video");
+            videoPath = await uploadResumableFile(videoFile, "video");
           }
 
           status.textContent = "Saving message...";
