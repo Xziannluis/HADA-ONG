@@ -38,10 +38,18 @@
       </section>
     </main>
 
+    <div class="media-modal" id="mediaModal" hidden>
+      <button class="media-modal__close" id="mediaModalClose" type="button" aria-label="Close preview">Close</button>
+      <div class="media-modal__content" id="mediaModalContent"></div>
+    </div>
+
     <script>
       const wishList = document.getElementById("wishList");
       const wishCount = document.getElementById("wishCount");
       const logoutButton = document.getElementById("logoutButton");
+      const mediaModal = document.getElementById("mediaModal");
+      const mediaModalClose = document.getElementById("mediaModalClose");
+      const mediaModalContent = document.getElementById("mediaModalContent");
 
       function hasLocalAccess() {
         return localStorage.getItem("forherjada_auth") === "true";
@@ -100,28 +108,34 @@
         return image;
       }
 
-      function buildMediaToggle(label, mediaElement) {
-        const wrapper = document.createElement("div");
-        wrapper.className = "wish-card__media";
+      function openMediaPreview(mediaElement) {
+        mediaModalContent.innerHTML = "";
+        mediaModalContent.appendChild(mediaElement);
+        mediaModal.hidden = false;
+        document.body.classList.add("modal-open");
+      }
 
+      function closeMediaPreview() {
+        const video = mediaModalContent.querySelector("video");
+        if (video) {
+          video.pause();
+        }
+
+        mediaModal.hidden = true;
+        mediaModalContent.innerHTML = "";
+        document.body.classList.remove("modal-open");
+      }
+
+      function buildMediaButton(label, mediaElement) {
         const button = document.createElement("button");
         button.className = "message-item__delete wish-card__media-button";
         button.type = "button";
-        button.textContent = `Show ${label}`;
-
-        const panel = document.createElement("div");
-        panel.className = "wish-card__media-panel";
-        panel.hidden = true;
-        panel.appendChild(mediaElement);
-
+        button.textContent = `View ${label}`;
         button.addEventListener("click", () => {
-          const isHidden = panel.hidden;
-          panel.hidden = !isHidden;
-          button.textContent = isHidden ? `Hide ${label}` : `Show ${label}`;
+          openMediaPreview(mediaElement);
         });
 
-        wrapper.append(button, panel);
-        return wrapper;
+        return button;
       }
 
       function formatDate(value) {
@@ -173,10 +187,10 @@
 
           card.append(meta, title, message);
           if (wish.photoPath) {
-            card.appendChild(buildMediaToggle("picture", buildPhoto(wish.photoPath, wish.senderName)));
+            card.appendChild(buildMediaButton("picture", buildPhoto(wish.photoPath, wish.senderName)));
           }
           if (wish.videoPath) {
-            card.appendChild(buildMediaToggle("video", buildVideo(wish.videoPath)));
+            card.appendChild(buildMediaButton("video", buildVideo(wish.videoPath)));
           }
           card.appendChild(deleteButton);
           wishList.appendChild(card);
@@ -218,6 +232,18 @@
         localStorage.removeItem("forherjada_static_mode");
         localStorage.removeItem("forherjada_passcode");
         window.location.href = "login.html";
+      });
+
+      mediaModalClose.addEventListener("click", closeMediaPreview);
+      mediaModal.addEventListener("click", (event) => {
+        if (event.target === mediaModal) {
+          closeMediaPreview();
+        }
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !mediaModal.hidden) {
+          closeMediaPreview();
+        }
       });
 
       loadWishes();
