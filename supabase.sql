@@ -18,7 +18,7 @@ INSERT INTO storage.buckets (
   'birthday-media',
   'birthday-media',
   true,
-  83886080,
+  262144000,
   ARRAY[
     'image/jpeg',
     'image/png',

@@ -78,15 +78,18 @@
     <script>
       const form = document.getElementById("wishForm");
       const status = document.getElementById("formStatus");
+      const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
+      const MAX_VIDEO_BYTES = 250 * 1024 * 1024;
 
-      async function submitToApi(payload) {
+      async function submitToApi(payload, isFormData = false) {
         const endpoints = ["/api", "api.php"];
 
         for (const endpoint of endpoints) {
           try {
             const response = await fetch(endpoint, {
               method: "POST",
-              body: payload,
+              headers: isFormData ? undefined : { "Content-Type": "application/json" },
+              body: isFormData ? payload : JSON.stringify(payload),
             });
             const contentType = response.headers.get("content-type") || "";
             if (!contentType.includes("application/json")) continue;
@@ -98,24 +101,76 @@
         return null;
       }
 
+      async function uploadDirectFile(file, kind) {
+        const apiResult = await submitToApi({
+          action: "createUploadUrl",
+          kind,
+          fileName: file.name,
+          mimeType: file.type,
+          size: file.size,
+        });
+
+        if (!apiResult || !apiResult.response.ok) {
+          throw new Error(apiResult?.result?.error || "Could not prepare upload.");
+        }
+
+        const uploadResponse = await fetch(apiResult.result.uploadUrl, {
+          method: "PUT",
+          headers: { "Content-Type": file.type || "application/octet-stream" },
+          body: file,
+        });
+
+        if (!uploadResponse.ok) {
+          throw new Error("Upload failed. Please try a smaller or different file.");
+        }
+
+        return apiResult.result.publicUrl;
+      }
+
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
         status.textContent = "Sending...";
         status.className = "form-status";
 
-        const payload = new FormData();
         const photoFile = document.getElementById("photoFileInput").files[0];
         const videoFile = document.getElementById("videoFileInput").files[0];
 
-        payload.append("action", "submitWish");
-        payload.append("name", document.getElementById("nameInput").value.trim());
-        payload.append("relationship", document.getElementById("relationshipInput").value.trim());
-        payload.append("message", document.getElementById("messageInput").value.trim());
-        if (photoFile) payload.append("photo", photoFile);
-        if (videoFile) payload.append("video", videoFile);
+        if (photoFile && photoFile.size > MAX_PHOTO_BYTES) {
+          status.textContent = "The picture is too large. Please choose an image under 10 MB.";
+          status.classList.add("form-status--error");
+          return;
+        }
+
+        if (videoFile && videoFile.size > MAX_VIDEO_BYTES) {
+          status.textContent = "The video is too large. Please choose or compress a video under 250 MB.";
+          status.classList.add("form-status--error");
+          return;
+        }
 
         try {
-          const apiResult = await submitToApi(payload);
+          let photoPath = "";
+          let videoPath = "";
+
+          if (photoFile) {
+            status.textContent = "Uploading picture...";
+            photoPath = await uploadDirectFile(photoFile, "photo");
+          }
+
+          if (videoFile) {
+            status.textContent = "Uploading video... Please keep this page open.";
+            videoPath = await uploadDirectFile(videoFile, "video");
+          }
+
+          status.textContent = "Saving message...";
+          const apiResult = await submitToApi({
+            action: "saveWish",
+            name: document.getElementById("nameInput").value.trim(),
+            relationship: document.getElementById("relationshipInput").value.trim(),
+            message: document.getElementById("messageInput").value.trim(),
+            photoPath,
+            videoPath,
+          });
+
           if (!apiResult) {
             status.textContent = "Sending needs the deployed Netlify/Supabase backend or a local PHP server.";
             status.classList.add("form-status--error");
@@ -133,8 +188,8 @@
           form.reset();
           status.textContent = "Sent. Thank you for your message.";
           status.classList.add("form-status--success");
-        } catch {
-          status.textContent = "Sending needs the deployed Netlify/Supabase backend or a local PHP server.";
+        } catch (error) {
+          status.textContent = error.message || "Sending needs the deployed Netlify/Supabase backend.";
           status.classList.add("form-status--error");
         }
       });

@@ -5,6 +5,8 @@ const PASSWORD = process.env.BIRTHDAY_PASSWORD || "071703";
 const SUPABASE_URL = process.env.SUPABASE_URL || "";
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
 const SUPABASE_BUCKET = process.env.SUPABASE_BUCKET || "birthday-media";
+const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
+const MAX_VIDEO_BYTES = 250 * 1024 * 1024;
 
 const json = (statusCode, body) => ({
   statusCode,
@@ -98,6 +100,42 @@ const randomName = (filename = "upload") => {
   return `${token}.${extension || "bin"}`;
 };
 
+const createSignedUpload = async (fileName, mimeType, size, kind) => {
+  const isPhoto = kind === "photo";
+  const allowedTypes = isPhoto
+    ? ["image/jpeg", "image/png", "image/gif", "image/webp"]
+    : ["video/mp4", "video/webm", "video/ogg", "video/quicktime"];
+  const maxBytes = isPhoto ? MAX_PHOTO_BYTES : MAX_VIDEO_BYTES;
+
+  if (!allowedTypes.includes(mimeType)) {
+    throw new Error("Unsupported file type.");
+  }
+  if (size > maxBytes) {
+    throw new Error(isPhoto ? "The picture is too large." : "The video is too large.");
+  }
+
+  const folder = isPhoto ? "photos" : "videos";
+  const objectPath = `${folder}/${randomName(fileName)}`;
+  const data = await supabaseFetch(
+    `/storage/v1/object/upload/sign/${SUPABASE_BUCKET}/${objectPath}`,
+    {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({}),
+    }
+  );
+  const uploadUrl = data.signedURL || data.signedUrl;
+  const absoluteUploadUrl = uploadUrl?.startsWith("http")
+    ? uploadUrl
+    : `${SUPABASE_URL}/storage/v1${uploadUrl}`;
+
+  return {
+    objectPath,
+    uploadUrl: absoluteUploadUrl,
+    publicUrl: `${SUPABASE_URL}/storage/v1/object/public/${SUPABASE_BUCKET}/${objectPath}`,
+  };
+};
+
 const uploadFile = async (file, folder, allowedTypes, maxBytes) => {
   if (!file || !file.buffer?.length) return "";
   if (!allowedTypes.includes(file.mimeType)) {
@@ -172,14 +210,59 @@ exports.handler = async (event) => {
         files.photo,
         "photos",
         ["image/jpeg", "image/png", "image/gif", "image/webp"],
-        8 * 1024 * 1024
+        MAX_PHOTO_BYTES
       );
       const videoPath = await uploadFile(
         files.video,
         "videos",
         ["video/mp4", "video/webm", "video/ogg", "video/quicktime"],
-        80 * 1024 * 1024
+        MAX_VIDEO_BYTES
       );
+
+      await supabaseFetch("/rest/v1/wishes", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          prefer: "return=minimal",
+        },
+        body: JSON.stringify({
+          sender_name: senderName,
+          relationship,
+          message,
+          photo_path: photoPath,
+          video_path: videoPath,
+        }),
+      });
+
+      return json(200, { ok: true, message: "Your message was sent." });
+    }
+
+    if (action === "createUploadUrl") {
+      const kind = cleanText(body.kind, 10);
+      if (kind !== "photo" && kind !== "video") {
+        return json(422, { error: "Invalid upload type." });
+      }
+
+      const upload = await createSignedUpload(
+        cleanText(body.fileName, 180),
+        cleanText(body.mimeType, 80),
+        Number.parseInt(body.size, 10) || 0,
+        kind
+      );
+
+      return json(200, upload);
+    }
+
+    if (action === "saveWish") {
+      const senderName = cleanText(body.name, 80);
+      const relationship = cleanText(body.relationship, 80);
+      const message = cleanMessage(body.message, 1500);
+      const photoPath = cleanText(body.photoPath, 1000);
+      const videoPath = cleanText(body.videoPath, 1000);
+
+      if (!senderName || !relationship || !message) {
+        return json(422, { error: "Name, relationship, and message are required." });
+      }
 
       await supabaseFetch("/rest/v1/wishes", {
         method: "POST",
