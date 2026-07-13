@@ -14,13 +14,12 @@
   </head>
   <body>
     <main class="page">
-      <section class="hero hero--compact" id="top">
-        <div class="hero__frame">
+      <section class="hero hero--compact celebrant-hero" id="top">
+        <div class="hero__frame celebrant-hero__frame">
           <p class="hero__eyebrow">Private inbox</p>
           <h1 class="hero__title">Kyla Jane Hada-Ong</h1>
-          <p class="hero__subhead">Messages, pictures, and videos sent for your birthday.</p>
+          <p class="hero__subhead">A quiet place for the messages, pictures, and videos sent for your birthday.</p>
           <div class="hero__actions">
-            <a class="editor-form__button" href="submit.html">Open sender page</a>
             <button class="editor-form__button editor-form__button--ghost" id="logoutButton" type="button">
               Logout
             </button>
@@ -31,7 +30,7 @@
       <section class="birthday birthday--inbox">
         <div class="inbox">
           <div class="panel__header inbox__header">
-            <p class="panel__eyebrow">Submissions</p>
+            <p class="panel__eyebrow">Birthday keepsakes</p>
             <h2 id="wishCount">Loading...</h2>
           </div>
           <div class="wish-list" id="wishList"></div>
@@ -101,6 +100,30 @@
         return image;
       }
 
+      function buildMediaToggle(label, mediaElement) {
+        const wrapper = document.createElement("div");
+        wrapper.className = "wish-card__media";
+
+        const button = document.createElement("button");
+        button.className = "message-item__delete wish-card__media-button";
+        button.type = "button";
+        button.textContent = `Show ${label}`;
+
+        const panel = document.createElement("div");
+        panel.className = "wish-card__media-panel";
+        panel.hidden = true;
+        panel.appendChild(mediaElement);
+
+        button.addEventListener("click", () => {
+          const isHidden = panel.hidden;
+          panel.hidden = !isHidden;
+          button.textContent = isHidden ? `Hide ${label}` : `Show ${label}`;
+        });
+
+        wrapper.append(button, panel);
+        return wrapper;
+      }
+
       function formatDate(value) {
         if (!value) return "";
         return new Intl.DateTimeFormat("en", {
@@ -150,10 +173,10 @@
 
           card.append(meta, title, message);
           if (wish.photoPath) {
-            card.appendChild(buildPhoto(wish.photoPath, wish.senderName));
+            card.appendChild(buildMediaToggle("picture", buildPhoto(wish.photoPath, wish.senderName)));
           }
           if (wish.videoPath) {
-            card.appendChild(buildVideo(wish.videoPath));
+            card.appendChild(buildMediaToggle("video", buildVideo(wish.videoPath)));
           }
           card.appendChild(deleteButton);
           wishList.appendChild(card);

@@ -26,6 +26,18 @@ body {
   min-height: 100vh;
 }
 
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(rgba(255, 247, 232, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 247, 232, 0.03) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(circle at top, black, transparent 72%);
+}
+
 .page {
   min-height: 100vh;
 }
@@ -127,7 +139,11 @@ body {
 }
 
 .hero--compact {
-  min-height: 62vh;
+  min-height: 58vh;
+}
+
+.celebrant-hero {
+  padding-bottom: 1rem;
 }
 
 .hero__frame {
@@ -142,6 +158,18 @@ body {
   width: 100%;
   opacity: 0;
   animation: heroFadeIn 7s ease forwards;
+}
+
+.celebrant-hero__frame {
+  border-color: rgba(255, 211, 110, 0.18);
+  border-radius: 28px;
+  background:
+    linear-gradient(145deg, rgba(255, 247, 232, 0.075), rgba(255, 255, 255, 0.02)),
+    rgba(38, 24, 64, 0.5);
+  box-shadow:
+    0 30px 90px rgba(0, 0, 0, 0.36),
+    inset 0 1px 0 rgba(255, 247, 232, 0.12);
+  max-width: 760px;
 }
 
 @keyframes heroFadeIn {
@@ -170,11 +198,24 @@ body {
   margin-bottom: 1rem;
 }
 
+.celebrant-hero__frame .hero__title {
+  color: #fff4d6;
+  font-size: clamp(3rem, 7vw, 5.8rem);
+  letter-spacing: 0;
+  line-height: 1.08;
+  text-shadow: 0 18px 40px rgba(0, 0, 0, 0.26);
+}
+
 .hero__subhead {
   font-family: "Playfair Display", serif;
   font-size: 1.1rem;
   color: var(--accent);
   margin-bottom: 2.5rem;
+}
+
+.celebrant-hero__frame .hero__subhead {
+  max-width: 540px;
+  margin-inline: auto;
 }
 
 .hero__scroll {
@@ -447,22 +488,32 @@ body {
 
 .inbox__header {
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.8rem;
+}
+
+.inbox__header h2 {
+  color: #fff4d6;
+  font-family: "Playfair Display", serif;
+  font-size: clamp(1.6rem, 3vw, 2.35rem);
 }
 
 .wish-list {
   display: grid;
-  gap: 1rem;
+  gap: 1.15rem;
 }
 
 .wish-card {
-  border: 1px solid var(--card-border);
-  border-radius: 18px;
-  background: rgba(37, 25, 59, 0.72);
-  box-shadow: 0 22px 45px rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(255, 247, 232, 0.16);
+  border-radius: 20px;
+  background:
+    linear-gradient(145deg, rgba(255, 247, 232, 0.06), rgba(255, 255, 255, 0.02)),
+    rgba(36, 23, 58, 0.76);
+  box-shadow:
+    0 24px 50px rgba(0, 0, 0, 0.24),
+    inset 0 1px 0 rgba(255, 247, 232, 0.08);
   display: grid;
   gap: 0.85rem;
-  padding: 1.4rem;
+  padding: 1.55rem;
 }
 
 .wish-card h3 {
@@ -492,12 +543,36 @@ body {
   background: rgba(0, 0, 0, 0.25);
 }
 
+.wish-card__media {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.wish-card__media-button {
+  color: var(--accent);
+  border-color: rgba(255, 211, 110, 0.45);
+}
+
+.wish-card__media-button:hover {
+  color: #27183f;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.wish-card__media-panel[hidden] {
+  display: none;
+}
+
 .wish-card .video-card__stage {
   margin-top: 0.4rem;
 }
 
 .wish-card--empty {
-  color: var(--muted);
+  color: rgba(255, 247, 232, 0.78);
+  font-family: "Playfair Display", serif;
+  font-size: 1.1rem;
+  min-height: 92px;
+  place-items: center;
   text-align: center;
 }
 
@@ -620,6 +695,10 @@ body {
 @media (max-width: 720px) {
   .hero__frame {
     padding: 2rem 1.5rem;
+  }
+
+  .celebrant-hero__frame .hero__title {
+    font-size: clamp(2.45rem, 13vw, 4rem);
   }
 
   .letter__card {
