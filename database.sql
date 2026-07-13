@@ -1,0 +1,16 @@
+CREATE DATABASE IF NOT EXISTS `hada_ong`
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+
+USE `hada_ong`;
+
+CREATE TABLE IF NOT EXISTS `wishes` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `sender_name` VARCHAR(80) NOT NULL,
+  `relationship` VARCHAR(80) NOT NULL,
+  `message` TEXT NOT NULL,
+  `photo_path` VARCHAR(255) NOT NULL DEFAULT '',
+  `video_path` VARCHAR(255) NOT NULL DEFAULT '',
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

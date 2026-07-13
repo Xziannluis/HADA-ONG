@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Send a Message | Kyla Jane Hada-Ong</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Prata&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page sender-page">
+      <section class="sender">
+        <div class="sender__intro">
+          <p class="hero__eyebrow">Private submission</p>
+          <h1 class="hero__title">Send a message for Kyla Jane Hada-Ong</h1>
+          <p class="hero__subhead">
+            Leave a message, picture, and video. Only Kyla Jane Hada-Ong can open and read what everyone sends.
+          </p>
+          <a class="sender__private-link" href="login.html">Kyla Jane's login</a>
+        </div>
+
+        <section class="editor-card sender__card">
+          <div class="panel__header">
+            <p class="panel__eyebrow">Your message</p>
+            <h2>Your private note</h2>
+          </div>
+          <form class="editor-form" id="wishForm" enctype="multipart/form-data">
+            <label class="editor-form__label" for="nameInput">Your name</label>
+            <input class="editor-form__input" id="nameInput" maxlength="80" required />
+
+            <label class="editor-form__label" for="relationshipInput">Relationship</label>
+            <input
+              class="editor-form__input"
+              id="relationshipInput"
+              maxlength="80"
+              placeholder="Friend, family, loved one..."
+              required
+            />
+
+            <label class="editor-form__label" for="messageInput">Message</label>
+            <textarea
+              class="editor-form__textarea"
+              id="messageInput"
+              maxlength="1500"
+              placeholder="Write your message here..."
+              rows="7"
+              required
+            ></textarea>
+
+            <label class="editor-form__label" for="photoFileInput">Picture</label>
+            <input
+              class="editor-form__input editor-form__file"
+              id="photoFileInput"
+              type="file"
+              accept="image/jpeg,image/png,image/gif,image/webp"
+            />
+
+            <label class="editor-form__label" for="videoFileInput">Video file</label>
+            <input
+              class="editor-form__input editor-form__file"
+              id="videoFileInput"
+              type="file"
+              accept="video/mp4,video/webm,video/ogg,video/quicktime"
+            />
+
+            <button class="editor-form__button" type="submit">Send message</button>
+            <p class="form-status" id="formStatus" aria-live="polite"></p>
+          </form>
+        </section>
+      </section>
+    </main>
+
+    <script>
+      const form = document.getElementById("wishForm");
+      const status = document.getElementById("formStatus");
+
+      async function submitToApi(payload) {
+        const endpoints = ["/api", "api.php"];
+
+        for (const endpoint of endpoints) {
+          try {
+            const response = await fetch(endpoint, {
+              method: "POST",
+              body: payload,
+            });
+            const contentType = response.headers.get("content-type") || "";
+            if (!contentType.includes("application/json")) continue;
+            return { response, result: await response.json() };
+          } catch {
+          }
+        }
+
+        return null;
+      }
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        status.textContent = "Sending...";
+        status.className = "form-status";
+
+        const payload = new FormData();
+        const photoFile = document.getElementById("photoFileInput").files[0];
+        const videoFile = document.getElementById("videoFileInput").files[0];
+
+        payload.append("action", "submitWish");
+        payload.append("name", document.getElementById("nameInput").value.trim());
+        payload.append("relationship", document.getElementById("relationshipInput").value.trim());
+        payload.append("message", document.getElementById("messageInput").value.trim());
+        if (photoFile) payload.append("photo", photoFile);
+        if (videoFile) payload.append("video", videoFile);
+
+        try {
+          const apiResult = await submitToApi(payload);
+          if (!apiResult) {
+            status.textContent = "Sending needs the deployed Netlify/Supabase backend or a local PHP server.";
+            status.classList.add("form-status--error");
+            return;
+          }
+
+          const { response, result } = apiResult;
+
+          if (!response.ok) {
+            status.textContent = result.error || "Could not send your wish.";
+            status.classList.add("form-status--error");
+            return;
+          }
+
+          form.reset();
+          status.textContent = "Sent. Thank you for your message.";
+          status.classList.add("form-status--success");
+        } catch {
+          status.textContent = "Sending needs the deployed Netlify/Supabase backend or a local PHP server.";
+          status.classList.add("form-status--error");
+        }
+      });
+    </script>
+  </body>
+</html>

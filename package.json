@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "dev": "netlify dev",
+    "build": "echo Static site ready"
+  },
+  "dependencies": {
+    "busboy": "^1.6.0"
+  },
+  "devDependencies": {
+    "netlify-cli": "^17.38.1"
+  }
+}

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login | Kyla Jane Hada-Ong</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Prata&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page login">
+      <section class="login__card">
+        <p class="login__eyebrow">Kyla Jane Hada-Ong</p>
+        <h1 class="login__title">Enter the passcode</h1>
+        <p class="login__subtitle">Only Kyla Jane can open these wishes.</p>
+        <form class="login__form" id="loginForm">
+          <label class="login__label" for="password">Password</label>
+          <input
+            class="login__input"
+            type="password"
+            id="password"
+            name="password"
+            placeholder="******"
+            autocomplete="off"
+            required
+          />
+          <button class="login__button" type="submit">Unlock</button>
+          <p class="login__error" id="loginError" aria-live="polite"></p>
+        </form>
+      </section>
+    </main>
+
+    <script>
+      const form = document.getElementById("loginForm");
+      const error = document.getElementById("loginError");
+      const PASSWORD = "071703";
+
+      async function postJson(payload) {
+        const endpoints = ["/api", "api.php"];
+
+        for (const endpoint of endpoints) {
+          try {
+            const response = await fetch(endpoint, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            });
+            const contentType = response.headers.get("content-type") || "";
+            if (!contentType.includes("application/json")) continue;
+            return { response, result: await response.json() };
+          } catch {
+          }
+        }
+
+        return null;
+      }
+
+      function openInboxLocally(value) {
+        if (value !== PASSWORD) {
+          error.textContent = "Incorrect password. Try again.";
+          return;
+        }
+
+        localStorage.setItem("forherjada_auth", "true");
+        localStorage.setItem("forherjada_static_mode", "true");
+        localStorage.setItem("forherjada_passcode", value);
+        window.location.href = "index.html";
+      }
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const value = document.getElementById("password").value.trim();
+        error.textContent = "";
+
+        try {
+          const apiResult = await postJson({ action: "login", password: value });
+          if (!apiResult) {
+            openInboxLocally(value);
+            return;
+          }
+
+          const { response, result } = apiResult;
+
+          if (!response.ok) {
+            error.textContent = result.error || "Incorrect password. Try again.";
+            return;
+          }
+
+          localStorage.setItem("forherjada_auth", "true");
+          localStorage.setItem("forherjada_passcode", value);
+          localStorage.removeItem("forherjada_static_mode");
+          window.location.href = "index.html";
+        } catch {
+          openInboxLocally(value);
+        }
+      });
+    </script>
+  </body>
+</html>

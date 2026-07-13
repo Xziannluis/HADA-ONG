@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Birthday Inbox | Kyla Jane Hada-Ong</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Prata&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <section class="hero hero--compact" id="top">
+        <div class="hero__frame">
+          <p class="hero__eyebrow">Private inbox</p>
+          <h1 class="hero__title">Kyla Jane Hada-Ong</h1>
+          <p class="hero__subhead">Messages, pictures, and videos sent for your birthday.</p>
+          <div class="hero__actions">
+            <a class="editor-form__button" href="submit.html">Open sender page</a>
+            <button class="editor-form__button editor-form__button--ghost" id="logoutButton" type="button">
+              Logout
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="birthday birthday--inbox">
+        <div class="inbox">
+          <div class="panel__header inbox__header">
+            <p class="panel__eyebrow">Submissions</p>
+            <h2 id="wishCount">Loading...</h2>
+          </div>
+          <div class="wish-list" id="wishList"></div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const wishList = document.getElementById("wishList");
+      const wishCount = document.getElementById("wishCount");
+      const logoutButton = document.getElementById("logoutButton");
+
+      function hasLocalAccess() {
+        return localStorage.getItem("forherjada_auth") === "true";
+      }
+
+      async function api(action, payload = {}) {
+        const endpoints = ["/api", "api.php"];
+        const requestPayload = {
+          action,
+          password: localStorage.getItem("forherjada_passcode") || "",
+          ...payload,
+        };
+
+        for (const endpoint of endpoints) {
+          try {
+            const response = await fetch(endpoint, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(requestPayload),
+            });
+            const contentType = response.headers.get("content-type") || "";
+            if (!contentType.includes("application/json")) continue;
+            const result = await response.json();
+
+            if (!response.ok) {
+              throw new Error(result.error || "Request failed.");
+            }
+
+            return result;
+          } catch (error) {
+            if (endpoint === endpoints[endpoints.length - 1]) {
+              throw error;
+            }
+          }
+        }
+
+        throw new Error("Request failed.");
+      }
+
+      function buildVideo(url) {
+        const stage = document.createElement("div");
+        stage.className = "video-card__stage";
+        const video = document.createElement("video");
+        video.src = url;
+        video.controls = true;
+        stage.appendChild(video);
+        return stage;
+      }
+
+      function buildPhoto(url, senderName) {
+        const image = document.createElement("img");
+        image.className = "wish-card__photo";
+        image.src = url;
+        image.alt = `Photo sent by ${senderName}`;
+        image.loading = "lazy";
+        return image;
+      }
+
+      function formatDate(value) {
+        if (!value) return "";
+        return new Intl.DateTimeFormat("en", {
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+          hour: "numeric",
+          minute: "2-digit",
+        }).format(new Date(value.replace(" ", "T")));
+      }
+
+      function renderWishes(wishes) {
+        wishList.innerHTML = "";
+        wishCount.textContent = wishes.length === 1 ? "1 message received" : `${wishes.length} messages received`;
+
+        if (!wishes.length) {
+          const empty = document.createElement("article");
+          empty.className = "wish-card wish-card--empty";
+          empty.textContent = "No submissions yet.";
+          wishList.appendChild(empty);
+          return;
+        }
+
+        wishes.forEach((wish) => {
+          const card = document.createElement("article");
+          card.className = "wish-card";
+
+          const meta = document.createElement("p");
+          meta.className = "wish-card__meta";
+          meta.textContent = `${wish.relationship} | ${formatDate(wish.createdAt)}`;
+
+          const title = document.createElement("h3");
+          title.textContent = wish.senderName;
+
+          const message = document.createElement("p");
+          message.className = "wish-card__message";
+          message.textContent = wish.message;
+
+          const deleteButton = document.createElement("button");
+          deleteButton.className = "message-item__delete";
+          deleteButton.type = "button";
+          deleteButton.textContent = "Remove";
+          deleteButton.addEventListener("click", async () => {
+            await api("deleteWish", { id: wish.id });
+            loadWishes();
+          });
+
+          card.append(meta, title, message);
+          if (wish.photoPath) {
+            card.appendChild(buildPhoto(wish.photoPath, wish.senderName));
+          }
+          if (wish.videoPath) {
+            card.appendChild(buildVideo(wish.videoPath));
+          }
+          card.appendChild(deleteButton);
+          wishList.appendChild(card);
+        });
+      }
+
+      async function loadWishes() {
+        try {
+          const session = await api("checkSession");
+          if (!session.authenticated) {
+            if (hasLocalAccess()) {
+              renderWishes([]);
+              return;
+            }
+
+            window.location.href = "login.html";
+            return;
+          }
+
+          localStorage.removeItem("forherjada_static_mode");
+          const result = await api("listWishes");
+          renderWishes(result.wishes || []);
+        } catch {
+          if (hasLocalAccess()) {
+            renderWishes([]);
+            return;
+          }
+
+          window.location.href = "login.html";
+        }
+      }
+
+      logoutButton.addEventListener("click", async () => {
+        try {
+          await api("logout");
+        } catch {
+        }
+        localStorage.removeItem("forherjada_auth");
+        localStorage.removeItem("forherjada_static_mode");
+        localStorage.removeItem("forherjada_passcode");
+        window.location.href = "login.html";
+      });
+
+      loadWishes();
+    </script>
+  </body>
+</html>
