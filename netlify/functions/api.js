@@ -1,5 +1,6 @@
 const Busboy = require("busboy");
 const { randomBytes } = require("crypto");
+const { createClient } = require("@supabase/supabase-js");
 
 const PASSWORD = process.env.BIRTHDAY_PASSWORD || "071703";
 const SUPABASE_URL = process.env.SUPABASE_URL || "";
@@ -19,6 +20,16 @@ const requireSupabase = () => {
   if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
     throw new Error("Supabase is not configured yet.");
   }
+};
+
+const supabaseClient = () => {
+  requireSupabase();
+  return createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+    },
+  });
 };
 
 const supabaseFetch = async (path, options = {}) => {
@@ -117,20 +128,21 @@ const createSignedUpload = async (fileName, mimeType, size, kind) => {
 
   const folder = isPhoto ? "photos" : "videos";
   const objectPath = `${folder}/${randomName(fileName)}`;
-  const data = await supabaseFetch(
-    `/storage/v1/object/upload/sign/${SUPABASE_BUCKET}/${objectPath}`,
-    {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({}),
-    }
-  );
-  const uploadUrl = data.signedURL || data.signedUrl;
-  const absoluteUploadUrl = uploadUrl?.startsWith("http")
+  const { data, error } = await supabaseClient()
+    .storage
+    .from(SUPABASE_BUCKET)
+    .createSignedUploadUrl(objectPath, { upsert: false });
+
+  if (error) {
+    throw new Error(error.message || "Could not create upload URL.");
+  }
+
+  const uploadUrl = data?.signedUrl || data?.signedURL || "";
+  const absoluteUploadUrl = uploadUrl.startsWith("http")
     ? uploadUrl
     : `${SUPABASE_URL}/storage/v1${uploadUrl}`;
+  const token = data?.token || "";
 
-  const token = data.token || new URL(absoluteUploadUrl).searchParams.get("token") || "";
   if (!token) {
     throw new Error("Could not create a signed upload token.");
   }

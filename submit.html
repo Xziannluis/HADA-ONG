@@ -141,7 +141,7 @@
               cacheControl: "3600",
             },
             onError(error) {
-              reject(error);
+              reject(new Error(error?.message || "Upload failed. Please try again."));
             },
             onProgress(bytesUploaded, bytesTotal) {
               const percent = Math.max(1, Math.round((bytesUploaded / bytesTotal) * 100));

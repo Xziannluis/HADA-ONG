@@ -4,6 +4,7 @@
     "build": "echo Static site ready"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.48.1",
     "busboy": "^1.6.0"
   },
   "devDependencies": {
