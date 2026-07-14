@@ -8,16 +8,17 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Prata&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="flower-blooming.css?v=3">
-    <link rel="stylesheet" href="flower-page.css?v=3">
+    <link rel="stylesheet" href="flower-blooming.css?v=5">
+    <link rel="stylesheet" href="flower-page.css?v=5">
 </head>
     
-<body class="not-loaded">
+<body>
   <main class="flower-page">
     <a class="flower-page__back" href="index.html">Back</a>
     <section class="flower-stage" aria-label="Blooming flowers for Kyla Jane">
       <div class="night"></div>
-      <div class="flowers" aria-hidden="true">
+      <div class="flower-garden" aria-hidden="true">
+        <div class="flowers">
       <div class="flower flower--1">
         <div class="flower__leafs flower__leafs--1">
           <div class="flower__leaf flower__leaf--1"></div>
@@ -312,6 +313,7 @@
           <div class="leaf leaf--3"></div>
         </div>
       </div>
+        </div>
       </div>
     </section>
 
@@ -330,19 +332,19 @@
       window.location.href = "login.html";
     } else {
       function replayFlowerAnimation() {
-        const garden = document.querySelector(".flowers");
+        const garden = document.querySelector(".flower-garden");
 
-        document.body.classList.add("not-loaded");
         if (garden) {
           garden.replaceWith(garden.cloneNode(true));
         }
-
-        window.setTimeout(function () {
-          document.body.classList.remove("not-loaded");
-        }, 1000);
       }
 
-      window.addEventListener("pageshow", replayFlowerAnimation);
+      replayFlowerAnimation();
+      window.addEventListener("pageshow", function (event) {
+        if (event.persisted) {
+          replayFlowerAnimation();
+        }
+      });
     }
   </script>
 </body>

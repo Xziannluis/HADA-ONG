@@ -63,10 +63,35 @@ body {
   transform: none;
 }
 
+.flower-garden {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  clip-path: inset(0 0 0 0);
+  animation: garden-reveal 4.8s cubic-bezier(0.16, 0.72, 0.2, 1) both;
+  will-change: clip-path, transform, opacity;
+}
+
 .flower-stage .flowers {
   position: relative;
   transform: scale(0.9);
   transform-origin: bottom center;
+}
+
+/* Keep the one-time growth animations, but stop the source's perpetual shaking loops. */
+.flower-stage .flower,
+.flower-stage .flower__grass--1,
+.flower-stage .flower__grass--2,
+.flower-stage .flower__g-long,
+.flower-stage .flower__g-right--1,
+.flower-stage .flower__g-right--2,
+.flower-stage .flower__g-front,
+.flower-stage .flower__g-fr,
+.flower-stage .long-g .leaf {
+  animation: none;
 }
 
 .flower-page__message {
@@ -101,6 +126,19 @@ body {
   color: #bce7dd;
   font: 400 clamp(1rem, 2vw, 1.2rem)/1.7 "Inter", sans-serif;
   letter-spacing: 0;
+}
+
+@keyframes garden-reveal {
+  from {
+    opacity: 0;
+    clip-path: inset(100% 0 0 0);
+    transform: translateY(72%);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+    transform: translateY(0);
+  }
 }
 
 @media (max-width: 720px) {
