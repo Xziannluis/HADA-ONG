@@ -18,7 +18,7 @@
         <div class="hero__frame celebrant-hero__frame">
           <p class="hero__eyebrow">Private inbox</p>
           <h1 class="hero__title">Kyla Jane Hada-Ong</h1>
-          <p class="hero__subhead">A quiet place for the messages, pictures, and videos sent for your birthday.</p>
+          <p class="hero__subhead">A quiet place for the messages and short videos sent for your birthday.</p>
           <div class="hero__actions">
             <button class="editor-form__button editor-form__button--ghost" id="logoutButton" type="button">
               Logout
@@ -99,15 +99,6 @@
         return stage;
       }
 
-      function buildPhoto(url, senderName) {
-        const image = document.createElement("img");
-        image.className = "wish-card__photo";
-        image.src = url;
-        image.alt = `Photo sent by ${senderName}`;
-        image.loading = "lazy";
-        return image;
-      }
-
       function openMediaPreview(mediaElement) {
         mediaModalContent.innerHTML = "";
         mediaModalContent.appendChild(mediaElement);
@@ -186,9 +177,6 @@
           });
 
           card.append(meta, title, message);
-          if (wish.photoPath) {
-            card.appendChild(buildMediaButton("picture", buildPhoto(wish.photoPath, wish.senderName)));
-          }
           if (wish.videoPath) {
             card.appendChild(buildMediaButton("video", buildVideo(wish.videoPath)));
           }

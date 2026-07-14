@@ -1,6 +1,6 @@
 # Birthday Inbox
 
-A Netlify-ready birthday inbox for Kyla Jane Hada-Ong. Guests can send a message, picture, and larger video file. Kyla Jane logs in privately to view submissions.
+A Netlify-ready birthday inbox for Kyla Jane Hada-Ong. Guests can send a message and an optional short video file. Kyla Jane logs in privately to view submissions.
 
 ## Best Deployment: Netlify + Supabase
 
@@ -30,6 +30,6 @@ GitHub Pages cannot save submissions because it does not run backend code. Netli
 - The private inbox can open offline after entering the passcode, but it will show no submissions without the backend.
 - Sending submissions requires the deployed Netlify function and Supabase.
 - Videos upload directly from the browser to Supabase Storage with signed upload URLs, so Netlify does not need to receive the whole video file.
-- The current upload limits are 10 MB for pictures and 2 GB for videos. Run `increase-upload-limit.sql` in Supabase if your existing bucket is still set lower.
+- The video field is optional, and the sender page asks guests to keep videos around 20-30 seconds. The storage limit remains 2 GB as a safety cap.
 - Keep `SUPABASE_SERVICE_ROLE_KEY` only in Netlify environment variables. Do not put it in frontend HTML or JavaScript.
 - The old PHP/MySQL files are still present as an optional fallback for PHP hosting, but Netlify uses `netlify/functions/api.js`.

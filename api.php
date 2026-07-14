@@ -180,18 +180,6 @@ try {
                 respond(['error' => 'Name, relationship, and message are required.'], 422);
             }
 
-            $photoPath = uploadMedia(
-                'photo',
-                $GLOBALS['uploadDir'],
-                $GLOBALS['uploadPublicPath'],
-                [
-                    'image/jpeg' => 'jpg',
-                    'image/png' => 'png',
-                    'image/gif' => 'gif',
-                    'image/webp' => 'webp',
-                ],
-                8 * 1024 * 1024
-            );
             $videoPath = uploadMedia(
                 'video',
                 $GLOBALS['uploadDir'],
@@ -214,7 +202,7 @@ try {
                 ':sender_name' => $name,
                 ':relationship' => $relationship,
                 ':message' => $message,
-                ':photo_path' => $photoPath,
+                ':photo_path' => '',
                 ':video_path' => $videoPath,
             ]);
 

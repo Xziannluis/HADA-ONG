@@ -19,7 +19,7 @@
           <p class="hero__eyebrow">Private submission</p>
           <h1 class="hero__title">Send a message for Kyla Jane Hada-Ong</h1>
           <p class="hero__subhead">
-            Leave a message, picture, and video. Only Kyla Jane Hada-Ong can open and read what everyone sends.
+            Leave a message and an optional short video. Only Kyla Jane Hada-Ong can open and read what everyone sends.
           </p>
           <a class="sender__private-link" href="login.html">Kyla Jane's login</a>
         </div>
@@ -52,15 +52,8 @@
               required
             ></textarea>
 
-            <label class="editor-form__label" for="photoFileInput">Picture</label>
-            <input
-              class="editor-form__input editor-form__file"
-              id="photoFileInput"
-              type="file"
-              accept="image/jpeg,image/png,image/gif,image/webp"
-            />
-
             <label class="editor-form__label" for="videoFileInput">Video file</label>
+            <p class="editor-form__hint">Optional. Please keep the video around 20-30 seconds before sending.</p>
             <input
               class="editor-form__input editor-form__file"
               id="videoFileInput"
@@ -78,8 +71,8 @@
     <script>
       const form = document.getElementById("wishForm");
       const status = document.getElementById("formStatus");
-      const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
       const MAX_VIDEO_BYTES = 2 * 1024 * 1024 * 1024;
+      const MAX_VIDEO_SECONDS = 30;
 
       async function submitToApi(payload, isFormData = false) {
         const endpoints = ["/api", "api.php"];
@@ -119,9 +112,8 @@
 
       async function uploadSignedFile(file, kind) {
         const upload = await createUpload(file, kind);
-        const label = kind === "photo" ? "picture" : "video";
 
-        status.textContent = `Uploading ${label}... Please keep this page open.`;
+        status.textContent = "Uploading video... Please keep this page open.";
         const response = await fetch(upload.uploadUrl, {
           method: "PUT",
           headers: { "Content-Type": file.type || "application/octet-stream" },
@@ -141,19 +133,30 @@
         return upload.publicUrl;
       }
 
+      async function getVideoDuration(file) {
+        return new Promise((resolve, reject) => {
+          const video = document.createElement("video");
+          const url = URL.createObjectURL(file);
+
+          video.preload = "metadata";
+          video.onloadedmetadata = () => {
+            URL.revokeObjectURL(url);
+            resolve(video.duration || 0);
+          };
+          video.onerror = () => {
+            URL.revokeObjectURL(url);
+            reject(new Error("Could not read the video length. Please choose another video."));
+          };
+          video.src = url;
+        });
+      }
+
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
         status.textContent = "Sending...";
         status.className = "form-status";
 
-        const photoFile = document.getElementById("photoFileInput").files[0];
         const videoFile = document.getElementById("videoFileInput").files[0];
-
-        if (photoFile && photoFile.size > MAX_PHOTO_BYTES) {
-          status.textContent = "The picture is too large. Please choose an image under 10 MB.";
-          status.classList.add("form-status--error");
-          return;
-        }
 
         if (videoFile && videoFile.size > MAX_VIDEO_BYTES) {
           status.textContent = "The video is too large. Please choose or compress a video under 2 GB.";
@@ -162,15 +165,17 @@
         }
 
         try {
-          let photoPath = "";
           let videoPath = "";
 
-          if (photoFile) {
-            status.textContent = "Uploading picture...";
-            photoPath = await uploadSignedFile(photoFile, "photo");
-          }
-
           if (videoFile) {
+            status.textContent = "Checking video length...";
+            const duration = await getVideoDuration(videoFile);
+            if (duration > MAX_VIDEO_SECONDS) {
+              status.textContent = "Please choose a shorter video. The video should be around 20-30 seconds.";
+              status.classList.add("form-status--error");
+              return;
+            }
+
             status.textContent = "Uploading video... Please keep this page open.";
             videoPath = await uploadSignedFile(videoFile, "video");
           }
@@ -181,7 +186,6 @@
             name: document.getElementById("nameInput").value.trim(),
             relationship: document.getElementById("relationshipInput").value.trim(),
             message: document.getElementById("messageInput").value.trim(),
-            photoPath,
             videoPath,
           });
 

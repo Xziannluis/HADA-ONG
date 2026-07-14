@@ -6,7 +6,6 @@ const PASSWORD = process.env.BIRTHDAY_PASSWORD || "071703";
 const SUPABASE_URL = process.env.SUPABASE_URL || "";
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
 const SUPABASE_BUCKET = process.env.SUPABASE_BUCKET || "birthday-media";
-const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
 const MAX_VIDEO_BYTES = 2 * 1024 * 1024 * 1024;
 
 const json = (statusCode, body) => ({
@@ -112,21 +111,16 @@ const randomName = (filename = "upload") => {
 };
 
 const createSignedUpload = async (fileName, mimeType, size, kind) => {
-  const isPhoto = kind === "photo";
-  const allowedTypes = isPhoto
-    ? ["image/jpeg", "image/png", "image/gif", "image/webp"]
-    : ["video/mp4", "video/webm", "video/ogg", "video/quicktime"];
-  const maxBytes = isPhoto ? MAX_PHOTO_BYTES : MAX_VIDEO_BYTES;
+  const allowedTypes = ["video/mp4", "video/webm", "video/ogg", "video/quicktime"];
 
   if (!allowedTypes.includes(mimeType)) {
     throw new Error("Unsupported file type.");
   }
-  if (size > maxBytes) {
-    throw new Error(isPhoto ? "The picture is too large." : "The video is too large.");
+  if (size > MAX_VIDEO_BYTES) {
+    throw new Error("The video is too large.");
   }
 
-  const folder = isPhoto ? "photos" : "videos";
-  const objectPath = `${folder}/${randomName(fileName)}`;
+  const objectPath = `videos/${randomName(fileName)}`;
   const { data, error } = await supabaseClient()
     .storage
     .from(SUPABASE_BUCKET)
@@ -217,12 +211,6 @@ exports.handler = async (event) => {
         return json(422, { error: "Name, relationship, and message are required." });
       }
 
-      const photoPath = await uploadFile(
-        files.photo,
-        "photos",
-        ["image/jpeg", "image/png", "image/gif", "image/webp"],
-        MAX_PHOTO_BYTES
-      );
       const videoPath = await uploadFile(
         files.video,
         "videos",
@@ -240,7 +228,7 @@ exports.handler = async (event) => {
           sender_name: senderName,
           relationship,
           message,
-          photo_path: photoPath,
+          photo_path: "",
           video_path: videoPath,
         }),
       });
@@ -250,7 +238,7 @@ exports.handler = async (event) => {
 
     if (action === "createUploadUrl") {
       const kind = cleanText(body.kind, 10);
-      if (kind !== "photo" && kind !== "video") {
+      if (kind !== "video") {
         return json(422, { error: "Invalid upload type." });
       }
 
@@ -268,7 +256,6 @@ exports.handler = async (event) => {
       const senderName = cleanText(body.name, 80);
       const relationship = cleanText(body.relationship, 80);
       const message = cleanMessage(body.message, 1500);
-      const photoPath = cleanText(body.photoPath, 1000);
       const videoPath = cleanText(body.videoPath, 1000);
 
       if (!senderName || !relationship || !message) {
@@ -285,7 +272,7 @@ exports.handler = async (event) => {
           sender_name: senderName,
           relationship,
           message,
-          photo_path: photoPath,
+          photo_path: "",
           video_path: videoPath,
         }),
       });

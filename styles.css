@@ -659,6 +659,14 @@ body::before {
   text-transform: uppercase;
 }
 
+.editor-form__hint {
+  color: var(--accent);
+  font-family: "Playfair Display", serif;
+  font-size: 0.96rem;
+  line-height: 1.45;
+  margin-top: -0.35rem;
+}
+
 .editor-form__textarea,
 .editor-form__input {
   width: 100%;
