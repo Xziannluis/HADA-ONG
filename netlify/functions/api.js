@@ -67,6 +67,21 @@ const cleanText = (value, limit) =>
 
 const cleanMessage = (value, limit) => String(value || "").trim().slice(0, limit);
 
+const cleanUrl = (value, limit) => {
+  const url = cleanText(value, limit);
+  if (!url) return "";
+
+  try {
+    const parsed = new URL(url);
+    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+      throw new Error();
+    }
+    return parsed.href;
+  } catch {
+    throw new Error("Please paste a valid video link.");
+  }
+};
+
 const parseJsonBody = (event) => {
   if (!event.body) return {};
   const body = event.isBase64Encoded ? Buffer.from(event.body, "base64").toString("utf8") : event.body;
@@ -256,7 +271,7 @@ exports.handler = async (event) => {
       const senderName = cleanText(body.name, 80);
       const relationship = cleanText(body.relationship, 80);
       const message = cleanMessage(body.message, 1500);
-      const videoPath = cleanText(body.videoPath, 1000);
+      const videoPath = cleanUrl(body.videoPath, 1000);
 
       if (!senderName || !relationship || !message) {
         return json(422, { error: "Name, relationship, and message are required." });

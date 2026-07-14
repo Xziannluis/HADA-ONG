@@ -428,6 +428,23 @@ body::before {
   object-fit: cover;
 }
 
+.video-card__link {
+  border: 1px solid rgba(255, 211, 110, 0.6);
+  border-radius: 999px;
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 0.7rem 0.95rem;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.video-card__link:hover {
+  background: var(--accent);
+  color: #27183f;
+}
+
 .sender-page {
   display: flex;
   align-items: center;

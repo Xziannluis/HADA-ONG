@@ -18,7 +18,7 @@
         <div class="hero__frame celebrant-hero__frame">
           <p class="hero__eyebrow">Private inbox</p>
           <h1 class="hero__title">Kyla Jane Hada-Ong</h1>
-          <p class="hero__subhead">A quiet place for the messages and short videos sent for your birthday.</p>
+          <p class="hero__subhead">A quiet place for the messages and video links sent for your birthday.</p>
           <div class="hero__actions">
             <button class="editor-form__button editor-form__button--ghost" id="logoutButton" type="button">
               Logout
@@ -89,9 +89,53 @@
         throw new Error("Request failed.");
       }
 
+      function getGoogleDrivePreviewUrl(url) {
+        try {
+          const parsed = new URL(url);
+          if (!parsed.hostname.includes("drive.google.com")) return "";
+
+          const fileMatch = parsed.pathname.match(/\/file\/d\/([^/]+)/);
+          const id = fileMatch ? fileMatch[1] : parsed.searchParams.get("id");
+          return id ? `https://drive.google.com/file/d/${id}/preview` : "";
+        } catch {
+          return "";
+        }
+      }
+
+      function isDirectVideoUrl(url) {
+        try {
+          const parsed = new URL(url);
+          return /\.(mp4|webm|ogg|mov)$/i.test(parsed.pathname);
+        } catch {
+          return false;
+        }
+      }
+
       function buildVideo(url) {
         const stage = document.createElement("div");
         stage.className = "video-card__stage";
+
+        const drivePreviewUrl = getGoogleDrivePreviewUrl(url);
+        if (drivePreviewUrl) {
+          const iframe = document.createElement("iframe");
+          iframe.src = drivePreviewUrl;
+          iframe.allow = "autoplay; fullscreen";
+          iframe.allowFullscreen = true;
+          stage.appendChild(iframe);
+          return stage;
+        }
+
+        if (!isDirectVideoUrl(url)) {
+          const link = document.createElement("a");
+          link.className = "video-card__link";
+          link.href = url;
+          link.target = "_blank";
+          link.rel = "noopener";
+          link.textContent = "Open video link";
+          stage.appendChild(link);
+          return stage;
+        }
+
         const video = document.createElement("video");
         video.src = url;
         video.controls = true;

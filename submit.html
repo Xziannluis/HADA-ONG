@@ -19,7 +19,7 @@
           <p class="hero__eyebrow">Private submission</p>
           <h1 class="hero__title">Send a message for Kyla Jane Hada-Ong</h1>
           <p class="hero__subhead">
-            Leave a message and an optional short video. Only Kyla Jane Hada-Ong can open and read what everyone sends.
+            Leave a message and an optional Google Drive video link. Only Kyla Jane Hada-Ong can open and read what everyone sends.
           </p>
           <a class="sender__private-link" href="login.html">Kyla Jane's login</a>
         </div>
@@ -29,7 +29,7 @@
             <p class="panel__eyebrow">Your message</p>
             <h2>Your private note</h2>
           </div>
-          <form class="editor-form" id="wishForm" enctype="multipart/form-data">
+          <form class="editor-form" id="wishForm">
             <label class="editor-form__label" for="nameInput">Your name</label>
             <input class="editor-form__input" id="nameInput" maxlength="80" required />
 
@@ -52,13 +52,16 @@
               required
             ></textarea>
 
-            <label class="editor-form__label" for="videoFileInput">Video file</label>
-            <p class="editor-form__hint">Optional. Please keep the video around 20-30 seconds before sending.</p>
+            <label class="editor-form__label" for="videoLinkInput">Video link</label>
+            <p class="editor-form__hint">
+              Optional. Upload the video to Google Drive, set sharing to anyone with the link, then paste the link here.
+            </p>
             <input
-              class="editor-form__input editor-form__file"
-              id="videoFileInput"
-              type="file"
-              accept="video/mp4,video/webm,video/ogg,video/quicktime"
+              class="editor-form__input"
+              id="videoLinkInput"
+              type="url"
+              maxlength="1000"
+              placeholder="https://drive.google.com/..."
             />
 
             <button class="editor-form__button" type="submit">Send message</button>
@@ -71,8 +74,6 @@
     <script>
       const form = document.getElementById("wishForm");
       const status = document.getElementById("formStatus");
-      const MAX_VIDEO_BYTES = 2 * 1024 * 1024 * 1024;
-      const MAX_VIDEO_SECONDS = 30;
 
       async function submitToApi(payload, isFormData = false) {
         const endpoints = ["/api", "api.php"];
@@ -94,87 +95,19 @@
         return null;
       }
 
-      async function createUpload(file, kind) {
-        const apiResult = await submitToApi({
-          action: "createUploadUrl",
-          kind,
-          fileName: file.name,
-          mimeType: file.type,
-          size: file.size,
-        });
+      function cleanOptionalUrl(value) {
+        const url = value.trim();
+        if (!url) return "";
 
-        if (!apiResult || !apiResult.response.ok) {
-          throw new Error(apiResult?.result?.error || "Could not prepare upload.");
+        try {
+          const parsed = new URL(url);
+          if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+            throw new Error();
+          }
+          return parsed.href;
+        } catch {
+          throw new Error("Please paste a valid Google Drive video link.");
         }
-
-        return apiResult.result;
-      }
-
-      async function uploadSignedFile(file, kind) {
-        const upload = await createUpload(file, kind);
-
-        return new Promise((resolve, reject) => {
-          const request = new XMLHttpRequest();
-
-          request.open("PUT", upload.uploadUrl);
-          request.setRequestHeader("Content-Type", file.type || "application/octet-stream");
-
-          request.upload.onprogress = (event) => {
-            if (!event.lengthComputable) {
-              status.textContent = "Uploading video... Please keep this page open.";
-              return;
-            }
-
-            const percent = Math.max(1, Math.min(99, Math.round((event.loaded / event.total) * 100)));
-            const left = Math.max(0, 100 - percent);
-            status.textContent = `Uploading video... ${percent}% complete, ${left}% left. Please keep this page open.`;
-          };
-
-          request.onload = () => {
-            if (request.status >= 200 && request.status < 300) {
-              status.textContent = "Uploading video... 100% complete.";
-              resolve(upload.publicUrl);
-              return;
-            }
-
-            let message = "Upload failed. Please try again in Safari or Chrome.";
-            try {
-              const error = JSON.parse(request.responseText || "{}");
-              message = error.message || message;
-            } catch {
-            }
-            reject(new Error(message));
-          };
-
-          request.onerror = () => {
-            reject(new Error("Upload failed. Please check your internet connection and try again."));
-          };
-
-          request.onabort = () => {
-            reject(new Error("Upload was cancelled."));
-          };
-
-          status.textContent = "Uploading video... 0% complete, 100% left. Please keep this page open.";
-          request.send(file);
-        });
-      }
-
-      async function getVideoDuration(file) {
-        return new Promise((resolve, reject) => {
-          const video = document.createElement("video");
-          const url = URL.createObjectURL(file);
-
-          video.preload = "metadata";
-          video.onloadedmetadata = () => {
-            URL.revokeObjectURL(url);
-            resolve(video.duration || 0);
-          };
-          video.onerror = () => {
-            URL.revokeObjectURL(url);
-            reject(new Error("Could not read the video length. Please choose another video."));
-          };
-          video.src = url;
-        });
       }
 
       form.addEventListener("submit", async (event) => {
@@ -182,29 +115,8 @@
         status.textContent = "Sending...";
         status.className = "form-status";
 
-        const videoFile = document.getElementById("videoFileInput").files[0];
-
-        if (videoFile && videoFile.size > MAX_VIDEO_BYTES) {
-          status.textContent = "The video is too large. Please choose or compress a video under 2 GB.";
-          status.classList.add("form-status--error");
-          return;
-        }
-
         try {
-          let videoPath = "";
-
-          if (videoFile) {
-            status.textContent = "Checking video length...";
-            const duration = await getVideoDuration(videoFile);
-            if (duration > MAX_VIDEO_SECONDS) {
-              status.textContent = "Please choose a shorter video. The video should be around 20-30 seconds.";
-              status.classList.add("form-status--error");
-              return;
-            }
-
-            status.textContent = "Uploading video... Please keep this page open.";
-            videoPath = await uploadSignedFile(videoFile, "video");
-          }
+          const videoPath = cleanOptionalUrl(document.getElementById("videoLinkInput").value);
 
           status.textContent = "Saving message...";
           const apiResult = await submitToApi({
