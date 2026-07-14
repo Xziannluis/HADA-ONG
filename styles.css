@@ -684,6 +684,30 @@ body::before {
   margin-top: -0.35rem;
 }
 
+.editor-form__guide {
+  border: 1px solid rgba(255, 211, 110, 0.22);
+  border-radius: 12px;
+  background: rgba(255, 211, 110, 0.07);
+  color: rgba(255, 247, 232, 0.9);
+  display: grid;
+  gap: 0.45rem;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  margin-top: -0.25rem;
+  padding: 0.8rem 0.9rem;
+}
+
+.editor-form__guide p {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.editor-form__guide ol {
+  display: grid;
+  gap: 0.35rem;
+  padding-left: 1.2rem;
+}
+
 .editor-form__textarea,
 .editor-form__input {
   width: 100%;
