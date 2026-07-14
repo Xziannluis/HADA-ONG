@@ -141,15 +141,15 @@ body {
 
 /* The garden settles into a slow breeze after its bottom-to-top reveal. */
 .flower-stage .flower--1 {
-  animation: pink-flower-sway-1 9s ease-in-out 7.4s infinite alternate;
+  animation: pink-flower-sway-1 6.4s ease-in-out 6.8s infinite alternate;
 }
 
 .flower-stage .flower--2 {
-  animation: pink-flower-sway-2 10.5s ease-in-out 7.8s infinite alternate;
+  animation: pink-flower-sway-2 7.2s ease-in-out 7s infinite alternate;
 }
 
 .flower-stage .flower--3 {
-  animation: pink-flower-sway-3 8.5s ease-in-out 8.2s infinite alternate;
+  animation: pink-flower-sway-3 6.8s ease-in-out 7.2s infinite alternate;
 }
 
 /* Seven extra stems turn the original trio into a layered bouquet. */
@@ -168,64 +168,64 @@ body {
 
 .flower-stage .flower--4 {
   --stem-left: -1vmin;
-  --stem-angle-a: -53deg;
-  --stem-angle-b: -50deg;
-  --sway-time: 11.5s;
-  --sway-delay: 8.1s;
+  --stem-angle-a: -55deg;
+  --stem-angle-b: -48deg;
+  --sway-time: 7.6s;
+  --sway-delay: 6.9s;
   --stem-layer: 6;
 }
 
 .flower-stage .flower--5 {
   --stem-left: -1vmin;
-  --stem-angle-a: -39deg;
-  --stem-angle-b: -36deg;
-  --sway-time: 9.8s;
-  --sway-delay: 8.4s;
+  --stem-angle-a: -41deg;
+  --stem-angle-b: -34deg;
+  --sway-time: 6.9s;
+  --sway-delay: 7.1s;
   --stem-layer: 8;
 }
 
 .flower-stage .flower--6 {
   --stem-left: 0;
-  --stem-angle-a: -28deg;
-  --stem-angle-b: -30.5deg;
-  --sway-time: 12.2s;
-  --sway-delay: 8.7s;
+  --stem-angle-a: -33deg;
+  --stem-angle-b: -25.5deg;
+  --sway-time: 7.8s;
+  --sway-delay: 7.3s;
   --stem-layer: 7;
 }
 
 .flower-stage .flower--7 {
   --stem-left: 0;
-  --stem-angle-a: 31deg;
-  --stem-angle-b: 28deg;
-  --sway-time: 10.8s;
-  --sway-delay: 8.2s;
+  --stem-angle-a: 34deg;
+  --stem-angle-b: 26deg;
+  --sway-time: 7.1s;
+  --sway-delay: 6.8s;
   --stem-layer: 9;
 }
 
 .flower-stage .flower--8 {
   --stem-left: 1vmin;
-  --stem-angle-a: 42deg;
-  --stem-angle-b: 39deg;
-  --sway-time: 12.8s;
-  --sway-delay: 8.6s;
+  --stem-angle-a: 45deg;
+  --stem-angle-b: 36deg;
+  --sway-time: 8s;
+  --sway-delay: 7s;
   --stem-layer: 7;
 }
 
 .flower-stage .flower--9 {
   --stem-left: 1vmin;
-  --stem-angle-a: 56deg;
-  --stem-angle-b: 53deg;
-  --sway-time: 11.2s;
-  --sway-delay: 8.9s;
+  --stem-angle-a: 59deg;
+  --stem-angle-b: 50deg;
+  --sway-time: 7.4s;
+  --sway-delay: 7.2s;
   --stem-layer: 6;
 }
 
 .flower-stage .flower--10 {
   --stem-left: 0;
-  --stem-angle-a: -2deg;
-  --stem-angle-b: 2deg;
-  --sway-time: 9.5s;
-  --sway-delay: 9.1s;
+  --stem-angle-a: -4deg;
+  --stem-angle-b: 4deg;
+  --sway-time: 6.7s;
+  --sway-delay: 7.4s;
   --stem-layer: 11;
 }
 
@@ -336,18 +336,18 @@ body {
 }
 
 @keyframes pink-flower-sway-1 {
-  from { transform: rotate(1.5deg); }
-  to { transform: rotate(-1.5deg); }
+  from { transform: rotate(3.5deg); }
+  to { transform: rotate(-3.5deg); }
 }
 
 @keyframes pink-flower-sway-2 {
-  from { transform: rotate(19deg); }
+  from { transform: rotate(23deg); }
   to { transform: rotate(16deg); }
 }
 
 @keyframes pink-flower-sway-3 {
-  from { transform: rotate(-16deg); }
-  to { transform: rotate(-18.5deg); }
+  from { transform: rotate(-13deg); }
+  to { transform: rotate(-20deg); }
 }
 
 @keyframes pink-bouquet-sway {
@@ -420,7 +420,6 @@ body {
   }
 
   .flower-garden,
-  .flower-stage .flower,
   .flower-stage .flower__grass--1,
   .flower-stage .flower__grass--2,
   .flower-stage .flower__g-long,
@@ -430,5 +429,10 @@ body {
   .flower-stage .flower__g-fr,
   .flower-stage .long-g .leaf {
     animation: none !important;
+  }
+
+  .flower-stage .flower {
+    animation-duration: 12s !important;
+    animation-delay: 0s !important;
   }
 }
