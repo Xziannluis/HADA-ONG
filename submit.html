@@ -11,7 +11,6 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
-    <script src="https://cdn.jsdelivr.net/npm/tus-js-client@4.3.1/dist/tus.min.js"></script>
   </head>
   <body>
     <main class="page sender-page">
@@ -118,47 +117,28 @@
         return apiResult.result;
       }
 
-      async function uploadResumableFile(file, kind) {
+      async function uploadSignedFile(file, kind) {
         const upload = await createUpload(file, kind);
-        const endpoint = `https://${upload.projectId}.storage.supabase.co/storage/v1/upload/resumable`;
         const label = kind === "photo" ? "picture" : "video";
 
-        return new Promise((resolve, reject) => {
-          const tusUpload = new tus.Upload(file, {
-            endpoint,
-            retryDelays: [0, 3000, 5000, 10000, 20000],
-            headers: {
-              "x-signature": upload.token,
-              "x-upsert": "false",
-            },
-            uploadDataDuringCreation: true,
-            removeFingerprintOnSuccess: true,
-            chunkSize: 6 * 1024 * 1024,
-            metadata: {
-              bucketName: upload.bucket,
-              objectName: upload.objectPath,
-              contentType: file.type || "application/octet-stream",
-              cacheControl: "3600",
-            },
-            onError(error) {
-              reject(new Error(error?.message || "Upload failed. Please try again."));
-            },
-            onProgress(bytesUploaded, bytesTotal) {
-              const percent = Math.max(1, Math.round((bytesUploaded / bytesTotal) * 100));
-              status.textContent = `Uploading ${label}... ${percent}% complete. Please keep this page open.`;
-            },
-            onSuccess() {
-              resolve(upload.publicUrl);
-            },
-          });
-
-          tusUpload.findPreviousUploads().then((previousUploads) => {
-            if (previousUploads.length) {
-              tusUpload.resumeFromPreviousUpload(previousUploads[0]);
-            }
-            tusUpload.start();
-          });
+        status.textContent = `Uploading ${label}... Please keep this page open.`;
+        const response = await fetch(upload.uploadUrl, {
+          method: "PUT",
+          headers: { "Content-Type": file.type || "application/octet-stream" },
+          body: file,
         });
+
+        if (!response.ok) {
+          let message = "Upload failed. Please try again in Safari or Chrome.";
+          try {
+            const error = await response.json();
+            message = error.message || message;
+          } catch {
+          }
+          throw new Error(message);
+        }
+
+        return upload.publicUrl;
       }
 
       form.addEventListener("submit", async (event) => {
@@ -187,12 +167,12 @@
 
           if (photoFile) {
             status.textContent = "Uploading picture...";
-            photoPath = await uploadResumableFile(photoFile, "photo");
+            photoPath = await uploadSignedFile(photoFile, "photo");
           }
 
           if (videoFile) {
             status.textContent = "Uploading video... Please keep this page open.";
-            videoPath = await uploadResumableFile(videoFile, "video");
+            videoPath = await uploadSignedFile(videoFile, "video");
           }
 
           status.textContent = "Saving message...";

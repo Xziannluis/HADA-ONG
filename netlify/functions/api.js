@@ -8,7 +8,6 @@ const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
 const SUPABASE_BUCKET = process.env.SUPABASE_BUCKET || "birthday-media";
 const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
 const MAX_VIDEO_BYTES = 2 * 1024 * 1024 * 1024;
-const projectId = () => new URL(SUPABASE_URL).hostname.split(".")[0];
 
 const json = (statusCode, body) => ({
   statusCode,
@@ -141,17 +140,8 @@ const createSignedUpload = async (fileName, mimeType, size, kind) => {
   const absoluteUploadUrl = uploadUrl.startsWith("http")
     ? uploadUrl
     : `${SUPABASE_URL}/storage/v1${uploadUrl}`;
-  const token = data?.token || "";
-
-  if (!token) {
-    throw new Error("Could not create a signed upload token.");
-  }
-
   return {
-    bucket: SUPABASE_BUCKET,
     objectPath,
-    projectId: projectId(),
-    token,
     uploadUrl: absoluteUploadUrl,
     publicUrl: `${SUPABASE_URL}/storage/v1/object/public/${SUPABASE_BUCKET}/${objectPath}`,
   };
