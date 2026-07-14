@@ -109,6 +109,10 @@ body {
   background-color: #ff73ad;
 }
 
+.flower-stage .flower__light {
+  display: none;
+}
+
 .flower-stage .flower__white-circle {
   background-color: #fff2f7;
 }
