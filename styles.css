@@ -790,19 +790,18 @@ body::before {
 
 .sunflower-page {
   min-height: 100vh;
-  background: #020404;
+  background: #fff0cc;
 }
 
 .sunflower-scene {
   min-height: 100vh;
   position: relative;
   display: grid;
-  grid-template-rows: minmax(560px, 68vh) auto;
+  grid-template-rows: minmax(620px, 74vh) auto;
   padding: 1.25rem 1.5rem 4rem;
   background:
-    radial-gradient(circle at 50% 30%, rgba(63, 206, 196, 0.2), transparent 18rem),
-    radial-gradient(circle at 50% 63%, rgba(26, 194, 178, 0.22), transparent 22rem),
-    linear-gradient(180deg, #000 0%, #020707 54%, #010303 100%);
+    radial-gradient(circle at 50% 95%, rgba(255, 196, 49, 0.2), transparent 24rem),
+    linear-gradient(180deg, #fff1ce 0%, #fff0cb 58%, #ffe5a8 100%);
 }
 
 .sunflower-scene__topbar {
@@ -823,64 +822,27 @@ body::before {
 .sunflower-field::before {
   content: "";
   position: absolute;
-  left: 50%;
-  top: 35%;
-  width: min(640px, 90vw);
-  height: min(640px, 90vw);
-  transform: translate(-50%, -50%);
+  inset: auto -8% 0;
+  height: 34%;
   background:
-    radial-gradient(circle, rgba(70, 235, 220, 0.18), rgba(28, 140, 134, 0.08) 34%, transparent 66%);
-  filter: blur(6px);
+    radial-gradient(ellipse at 50% 100%, rgba(93, 142, 46, 0.26), transparent 56%),
+    linear-gradient(180deg, transparent, rgba(118, 158, 58, 0.16));
 }
 
 .sunflower-field::after {
   content: "";
   position: absolute;
   inset: auto 0 0;
-  height: 170px;
-  background: radial-gradient(ellipse at 50% 100%, rgba(31, 221, 145, 0.3), transparent 58%);
-}
-
-.firefly {
-  position: absolute;
-  left: var(--x);
-  top: var(--y);
-  width: calc(10px * var(--s));
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: #deff3f;
-  box-shadow: 0 0 10px #deff3f, 0 0 22px rgba(222, 255, 63, 0.8);
-  opacity: 0.82;
-}
-
-.firefly--blue {
-  background: #42f2e8;
-  box-shadow: 0 0 10px #42f2e8, 0 0 22px rgba(66, 242, 232, 0.75);
-}
-
-.grass {
-  position: absolute;
-  left: var(--x);
-  bottom: 0;
-  width: 18px;
-  height: var(--h);
-  transform: rotate(var(--r));
-  transform-origin: 50% 100%;
-  border-radius: 100% 0 100% 0;
-  background: linear-gradient(90deg, transparent 0 34%, #0f792b 36% 52%, #37e060 56%, transparent 72%);
-  filter: drop-shadow(0 0 12px rgba(39, 225, 96, 0.42));
-}
-
-.grass--right {
-  background: linear-gradient(90deg, transparent 0 30%, #25da66 36% 48%, #0a6727 56%, transparent 74%);
+  height: 82px;
+  background: linear-gradient(180deg, transparent, rgba(89, 130, 43, 0.14));
 }
 
 .sunflower-bouquet {
   position: absolute;
   left: 50%;
-  bottom: 18px;
-  width: min(620px, 92vw);
-  height: min(560px, 68vh);
+  bottom: 0;
+  width: min(980px, 100vw);
+  height: min(620px, 74vh);
   transform: translateX(-50%);
 }
 
@@ -893,7 +855,11 @@ body::before {
   height: calc(var(--size) * 3.35);
   transform: translate(-50%, -10%) rotate(var(--r));
   transform-origin: 50% 100%;
-  filter: drop-shadow(0 0 18px rgba(63, 238, 220, 0.28));
+  filter: drop-shadow(0 18px 18px rgba(105, 86, 30, 0.22));
+  animation:
+    sunflower-grow 900ms cubic-bezier(0.2, 0.8, 0.24, 1) both,
+    sunflower-sway 5.4s ease-in-out infinite;
+  animation-delay: var(--d), calc(var(--d) + 900ms);
 }
 
 .sunflower__stem {
@@ -905,9 +871,9 @@ body::before {
   transform: translateX(-50%);
   border-radius: 999px;
   background:
-    linear-gradient(90deg, rgba(0, 0, 0, 0.26), transparent 20% 70%, rgba(255, 255, 255, 0.2)),
-    linear-gradient(180deg, #376f35, #1f8a4e 48%, #0f5d38);
-  box-shadow: 0 0 16px rgba(61, 214, 120, 0.28);
+    linear-gradient(90deg, rgba(45, 74, 22, 0.45), transparent 22% 68%, rgba(255, 255, 255, 0.18)),
+    linear-gradient(180deg, #6f9335, #4f812d 48%, #385d22);
+  box-shadow: inset 0 0 8px rgba(41, 74, 21, 0.24);
 }
 
 .sunflower__leaf {
@@ -917,9 +883,9 @@ body::before {
   height: calc(var(--size) * 0.23);
   border-radius: 100% 8% 100% 8%;
   background:
-    linear-gradient(135deg, transparent 48%, rgba(255, 255, 255, 0.24) 50%, transparent 52%),
-    linear-gradient(135deg, #3dad54, #1f7e45 62%, #0f4e30);
-  box-shadow: inset 0 -10px 16px rgba(0, 0, 0, 0.18), 0 0 12px rgba(38, 211, 111, 0.24);
+    linear-gradient(135deg, transparent 48%, rgba(218, 238, 157, 0.34) 50%, transparent 52%),
+    linear-gradient(135deg, #6d9c3e, #3f762d 62%, #24531e);
+  box-shadow: inset 0 -10px 16px rgba(46, 86, 28, 0.18);
   transform-origin: 0 50%;
 }
 
@@ -947,20 +913,28 @@ body::before {
   transform: translateX(-50%) rotate(calc(var(--r) * -0.35));
   border-radius: 50%;
   background:
-    radial-gradient(ellipse at 50% 8%, #ffd766 0 12%, transparent 13%),
-    radial-gradient(ellipse at 62% 10%, #f0a820 0 12%, transparent 13%),
-    radial-gradient(ellipse at 74% 20%, #ffd766 0 13%, transparent 14%),
-    radial-gradient(ellipse at 82% 34%, #efa21f 0 13%, transparent 14%),
-    radial-gradient(ellipse at 78% 52%, #ffe073 0 13%, transparent 14%),
-    radial-gradient(ellipse at 68% 68%, #ef9f1e 0 13%, transparent 14%),
-    radial-gradient(ellipse at 52% 78%, #ffd766 0 13%, transparent 14%),
-    radial-gradient(ellipse at 34% 74%, #efa21f 0 13%, transparent 14%),
-    radial-gradient(ellipse at 19% 61%, #ffe073 0 13%, transparent 14%),
-    radial-gradient(ellipse at 12% 43%, #ef9f1e 0 13%, transparent 14%),
-    radial-gradient(ellipse at 18% 25%, #ffd766 0 13%, transparent 14%),
-    radial-gradient(ellipse at 34% 11%, #efa21f 0 12%, transparent 13%),
+    radial-gradient(ellipse at 50% 3%, #f6c90f 0 12%, transparent 13%),
+    radial-gradient(ellipse at 59% 5%, #ffd84d 0 11%, transparent 12%),
+    radial-gradient(ellipse at 69% 10%, #eba20b 0 12%, transparent 13%),
+    radial-gradient(ellipse at 79% 20%, #ffc92c 0 13%, transparent 14%),
+    radial-gradient(ellipse at 87% 34%, #f2a80b 0 13%, transparent 14%),
+    radial-gradient(ellipse at 85% 49%, #ffd84d 0 13%, transparent 14%),
+    radial-gradient(ellipse at 77% 64%, #ef9a07 0 13%, transparent 14%),
+    radial-gradient(ellipse at 64% 76%, #f8c21a 0 13%, transparent 14%),
+    radial-gradient(ellipse at 49% 84%, #ffd84d 0 13%, transparent 14%),
+    radial-gradient(ellipse at 33% 78%, #f0a00a 0 13%, transparent 14%),
+    radial-gradient(ellipse at 19% 66%, #ffc92c 0 13%, transparent 14%),
+    radial-gradient(ellipse at 10% 49%, #eca10a 0 13%, transparent 14%),
+    radial-gradient(ellipse at 12% 31%, #ffd84d 0 13%, transparent 14%),
+    radial-gradient(ellipse at 22% 16%, #ed9c06 0 13%, transparent 14%),
+    radial-gradient(ellipse at 36% 7%, #ffc92c 0 12%, transparent 13%),
+    radial-gradient(ellipse at 55% 20%, #f8b80d 0 15%, transparent 16%),
+    radial-gradient(ellipse at 70% 35%, #ffd55d 0 14%, transparent 15%),
+    radial-gradient(ellipse at 62% 58%, #f2a20a 0 14%, transparent 15%),
+    radial-gradient(ellipse at 40% 64%, #ffd55d 0 14%, transparent 15%),
+    radial-gradient(ellipse at 28% 40%, #f1a10a 0 14%, transparent 15%),
     radial-gradient(circle at 50% 50%, rgba(255, 181, 34, 0.7) 0 35%, transparent 36%);
-  filter: drop-shadow(0 0 24px rgba(255, 196, 44, 0.48));
+  filter: drop-shadow(0 8px 8px rgba(116, 79, 16, 0.22));
 }
 
 .sunflower__head::before {
@@ -972,11 +946,11 @@ body::before {
     radial-gradient(circle at 38% 35%, rgba(255, 218, 70, 0.22) 0 5%, transparent 6%),
     radial-gradient(circle at 58% 42%, rgba(255, 218, 70, 0.18) 0 4%, transparent 5%),
     radial-gradient(circle at 46% 62%, rgba(255, 218, 70, 0.14) 0 4%, transparent 5%),
-    repeating-radial-gradient(circle, #221108 0 3px, #5b3214 4px 6px, #1b0d07 7px 9px);
-  border: calc(var(--size) * 0.025) solid #c97913;
+    repeating-radial-gradient(circle, #140905 0 3px, #4b2710 4px 6px, #251005 7px 9px);
+  border: calc(var(--size) * 0.025) solid #8b430d;
   box-shadow:
     inset 0 0 calc(var(--size) * 0.12) rgba(0, 0, 0, 0.65),
-    0 0 0 calc(var(--size) * 0.025) rgba(255, 201, 45, 0.7);
+    0 0 0 calc(var(--size) * 0.025) rgba(247, 169, 19, 0.82);
 }
 
 .sunflower__head::after {
@@ -995,12 +969,12 @@ body::before {
   --size: calc(150px * var(--s));
 }
 
-.sunflower--left .sunflower__stem {
-  transform: translateX(-50%) skewX(-8deg);
+.sunflower--side .sunflower__head {
+  transform: translateX(-50%) rotate(calc(var(--r) * -0.35)) scaleX(0.74);
 }
 
-.sunflower--right .sunflower__stem {
-  transform: translateX(-50%) skewX(8deg);
+.sunflower--low {
+  z-index: 3;
 }
 
 .sunflower-message {
@@ -1011,15 +985,15 @@ body::before {
   text-align: center;
   margin-top: 1.5rem;
   padding: 1.7rem 2rem;
-  border: 1px solid rgba(66, 242, 232, 0.18);
+  border: 1px solid rgba(116, 79, 16, 0.16);
   border-radius: 22px;
-  background: rgba(2, 8, 10, 0.64);
-  box-shadow: 0 0 42px rgba(42, 211, 194, 0.14);
-  backdrop-filter: blur(6px);
+  background: rgba(255, 244, 217, 0.82);
+  box-shadow: 0 22px 48px rgba(116, 79, 16, 0.12);
+  backdrop-filter: blur(4px);
 }
 
 .sunflower-message h1 {
-  color: #fff4d6;
+  color: #3d210d;
   font-family: "Prata", serif;
   font-size: clamp(2rem, 4.8vw, 4rem);
   line-height: 1.12;
@@ -1027,10 +1001,31 @@ body::before {
 }
 
 .sunflower-message p:last-child {
-  color: #c5fff6;
+  color: #42662d;
   font-family: "Playfair Display", serif;
   font-size: clamp(1rem, 2vw, 1.2rem);
   line-height: 1.65;
+}
+
+@keyframes sunflower-grow {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 20%) rotate(var(--r)) scaleY(0.2);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -10%) rotate(var(--r)) scaleY(1);
+  }
+}
+
+@keyframes sunflower-sway {
+  0%,
+  100% {
+    transform: translate(-50%, -10%) rotate(calc(var(--r) - 1.8deg));
+  }
+  50% {
+    transform: translate(-50%, -10%) rotate(calc(var(--r) + 1.8deg));
+  }
 }
 
 @media (max-width: 980px) {
@@ -1098,25 +1093,21 @@ body::before {
   }
 
   .sunflower-scene {
-    grid-template-rows: minmax(480px, 62vh) auto;
+    grid-template-rows: minmax(520px, 64vh) auto;
     padding: 5rem 1rem 2rem;
   }
 
   .sunflower {
-    --size: calc(98px * var(--s));
+    --size: calc(86px * var(--s));
   }
 
   .sunflower--center {
-    --size: calc(116px * var(--s));
+    --size: calc(104px * var(--s));
   }
 
   .sunflower-bouquet {
-    width: min(440px, 96vw);
-    height: min(460px, 58vh);
-  }
-
-  .grass {
-    height: calc(var(--h) * 0.72);
+    width: min(720px, 132vw);
+    height: min(500px, 60vh);
   }
 
   .sunflower-message {
