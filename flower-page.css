@@ -1,0 +1,133 @@
+body {
+  display: block;
+  width: 100%;
+  min-height: 100vh;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: #000;
+  color: #fff7e8;
+}
+
+.flower-page {
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  background: #000;
+}
+
+.flower-page__back {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1000;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0.65rem 1.1rem;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.58);
+  color: #fff;
+  font: 600 0.78rem/1 "Inter", sans-serif;
+  text-decoration: none;
+  text-transform: uppercase;
+  backdrop-filter: blur(8px);
+}
+
+.flower-page__back:hover,
+.flower-page__back:focus-visible {
+  border-color: #6bf0ff;
+  outline: none;
+}
+
+.flower-stage {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: 100%;
+  height: min(82svh, 860px);
+  min-height: 620px;
+  overflow: hidden;
+  perspective: 1000px;
+  background: #000;
+}
+
+.flower-stage .night {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: none;
+}
+
+.flower-stage .flowers {
+  position: relative;
+  transform: scale(0.86);
+}
+
+.flower-page__message {
+  width: min(760px, calc(100% - 2rem));
+  margin: 1.75rem auto 4rem;
+  padding: 2.25rem 2rem;
+  border: 1px solid rgba(107, 240, 255, 0.25);
+  border-radius: 8px;
+  background: #00110f;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
+  text-align: center;
+}
+
+.flower-page__eyebrow {
+  margin: 0 0 0.8rem;
+  color: #ffe154;
+  font: 600 0.72rem/1.2 "Inter", sans-serif;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.flower-page__message h1 {
+  margin: 0 0 1rem;
+  color: #fff4d7;
+  font: 400 clamp(2rem, 5vw, 4.2rem)/1.12 "Prata", serif;
+  letter-spacing: 0;
+}
+
+.flower-page__message p:last-child {
+  max-width: 620px;
+  margin: 0 auto;
+  color: #bce7dd;
+  font: 400 clamp(1rem, 2vw, 1.2rem)/1.7 "Inter", sans-serif;
+  letter-spacing: 0;
+}
+
+@media (max-width: 720px) {
+  .flower-stage {
+    height: 72svh;
+    min-height: 520px;
+  }
+
+  .flower-stage .flowers {
+    transform: scale(0.68);
+  }
+
+  .flower-page__message {
+    width: calc(100vw - 2rem);
+    max-width: calc(100vw - 2rem);
+    margin-top: 1rem;
+    padding: 1.75rem 1.15rem;
+  }
+
+  .flower-page__message h1 {
+    font-size: clamp(1.75rem, 8vw, 2.25rem);
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flower-stage * {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+  }
+}
