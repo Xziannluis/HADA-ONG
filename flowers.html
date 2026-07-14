@@ -8,8 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Prata&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="flower-blooming.css">
-    <link rel="stylesheet" href="flower-page.css">
+    <link rel="stylesheet" href="flower-blooming.css?v=2">
+    <link rel="stylesheet" href="flower-page.css?v=2">
 </head>
     
 <body class="not-loaded">
@@ -329,9 +329,20 @@
     if (localStorage.getItem("forherjada_auth") !== "true") {
       window.location.href = "login.html";
     } else {
-      window.setTimeout(function () {
-        document.body.classList.remove("not-loaded");
-      }, 700);
+      function replayFlowerAnimation() {
+        const garden = document.querySelector(".flowers");
+
+        document.body.classList.add("not-loaded");
+        if (garden) {
+          garden.replaceWith(garden.cloneNode(true));
+        }
+
+        window.setTimeout(function () {
+          document.body.classList.remove("not-loaded");
+        }, 180);
+      }
+
+      window.addEventListener("pageshow", replayFlowerAnimation);
     }
   </script>
 </body>
