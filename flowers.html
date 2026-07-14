@@ -8,8 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Prata&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="flower-blooming.css?v=6">
-    <link rel="stylesheet" href="flower-page.css?v=6">
+    <link rel="stylesheet" href="flower-blooming.css?v=7">
+    <link rel="stylesheet" href="flower-page.css?v=7">
 </head>
     
 <body>
@@ -331,6 +331,26 @@
     if (localStorage.getItem("forherjada_auth") !== "true") {
       window.location.href = "login.html";
     } else {
+      function buildBouquet() {
+        const flowers = document.querySelector(".flowers");
+        const firstFlower = flowers && flowers.querySelector(".flower--1");
+
+        if (!flowers || !firstFlower || flowers.querySelector(".flower--4")) {
+          return;
+        }
+
+        for (let number = 4; number <= 10; number += 1) {
+          const flower = firstFlower.cloneNode(true);
+          const leafs = flower.querySelector(".flower__leafs");
+
+          flower.className = `flower flower--${number}`;
+          if (leafs) {
+            leafs.className = "flower__leafs";
+          }
+          flowers.appendChild(flower);
+        }
+      }
+
       function replayFlowerAnimation() {
         const garden = document.querySelector(".flower-garden");
 
@@ -339,6 +359,7 @@
         }
       }
 
+      buildBouquet();
       replayFlowerAnimation();
       window.addEventListener("pageshow", function (event) {
         if (event.persisted) {

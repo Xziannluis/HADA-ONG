@@ -139,6 +139,113 @@ body {
   animation: pink-flower-sway-3 8.5s ease-in-out 5.2s infinite alternate;
 }
 
+/* Seven extra stems turn the original trio into a layered bouquet. */
+.flower-stage .flower--4,
+.flower-stage .flower--5,
+.flower-stage .flower--6,
+.flower-stage .flower--7,
+.flower-stage .flower--8,
+.flower-stage .flower--9,
+.flower-stage .flower--10 {
+  left: var(--stem-left);
+  z-index: var(--stem-layer, 8);
+  animation: pink-bouquet-sway var(--sway-time) ease-in-out var(--sway-delay) infinite alternate;
+}
+
+.flower-stage .flower--4 {
+  --stem-left: -1vmin;
+  --stem-angle-a: -53deg;
+  --stem-angle-b: -50deg;
+  --sway-time: 11.5s;
+  --sway-delay: 5.1s;
+  --stem-layer: 6;
+}
+
+.flower-stage .flower--5 {
+  --stem-left: -1vmin;
+  --stem-angle-a: -39deg;
+  --stem-angle-b: -36deg;
+  --sway-time: 9.8s;
+  --sway-delay: 5.4s;
+  --stem-layer: 8;
+}
+
+.flower-stage .flower--6 {
+  --stem-left: 0;
+  --stem-angle-a: -28deg;
+  --stem-angle-b: -30.5deg;
+  --sway-time: 12.2s;
+  --sway-delay: 5.7s;
+  --stem-layer: 7;
+}
+
+.flower-stage .flower--7 {
+  --stem-left: 0;
+  --stem-angle-a: 31deg;
+  --stem-angle-b: 28deg;
+  --sway-time: 10.8s;
+  --sway-delay: 5.2s;
+  --stem-layer: 9;
+}
+
+.flower-stage .flower--8 {
+  --stem-left: 1vmin;
+  --stem-angle-a: 42deg;
+  --stem-angle-b: 39deg;
+  --sway-time: 12.8s;
+  --sway-delay: 5.6s;
+  --stem-layer: 7;
+}
+
+.flower-stage .flower--9 {
+  --stem-left: 1vmin;
+  --stem-angle-a: 56deg;
+  --stem-angle-b: 53deg;
+  --sway-time: 11.2s;
+  --sway-delay: 5.9s;
+  --stem-layer: 6;
+}
+
+.flower-stage .flower--10 {
+  --stem-left: 0;
+  --stem-angle-a: -2deg;
+  --stem-angle-b: 2deg;
+  --sway-time: 9.5s;
+  --sway-delay: 6.1s;
+  --stem-layer: 11;
+}
+
+.flower-stage .flower--4 .flower__line { height: 39vmin; }
+.flower-stage .flower--5 .flower__line { height: 47vmin; }
+.flower-stage .flower--6 .flower__line { height: 52vmin; }
+.flower-stage .flower--7 .flower__line { height: 50vmin; }
+.flower-stage .flower--8 .flower__line { height: 47vmin; }
+.flower-stage .flower--9 .flower__line { height: 39vmin; }
+.flower-stage .flower--10 .flower__line { height: 42vmin; }
+
+.flower-stage .flower--4 .flower__leafs,
+.flower-stage .flower--9 .flower__leafs {
+  transform: scale(0.7);
+  animation-delay: 2.2s;
+}
+
+.flower-stage .flower--5 .flower__leafs,
+.flower-stage .flower--8 .flower__leafs {
+  transform: scale(0.82);
+  animation-delay: 2s;
+}
+
+.flower-stage .flower--6 .flower__leafs,
+.flower-stage .flower--7 .flower__leafs {
+  transform: scale(0.9);
+  animation-delay: 2.35s;
+}
+
+.flower-stage .flower--10 .flower__leafs {
+  transform: scale(0.76);
+  animation-delay: 2.55s;
+}
+
 .flower-stage .flower__grass--1 {
   animation: pink-grass-sway-1 11s ease-in-out 5s infinite alternate;
 }
@@ -227,6 +334,11 @@ body {
 @keyframes pink-flower-sway-3 {
   from { transform: rotate(-16deg); }
   to { transform: rotate(-18.5deg); }
+}
+
+@keyframes pink-bouquet-sway {
+  from { transform: rotate(var(--stem-angle-a)); }
+  to { transform: rotate(var(--stem-angle-b)); }
 }
 
 @keyframes pink-grass-sway-1 {
