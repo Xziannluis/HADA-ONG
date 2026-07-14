@@ -788,6 +788,142 @@ body::before {
   color: #ffb4b4;
 }
 
+.sunflower-page {
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.sunflower-scene {
+  min-height: 100vh;
+  position: relative;
+  display: grid;
+  align-items: end;
+  padding: 2rem 1.5rem 4rem;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255, 214, 111, 0.3), transparent 24rem),
+    linear-gradient(180deg, rgba(91, 72, 130, 0.8) 0%, rgba(53, 38, 86, 0.95) 46%, #211633 100%);
+}
+
+.sunflower-scene__topbar {
+  position: absolute;
+  top: 1.2rem;
+  left: 1.2rem;
+  z-index: 4;
+}
+
+.sunflower-field {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.sunflower-field::before {
+  content: "";
+  position: absolute;
+  inset: auto -10% 0;
+  height: 28%;
+  background:
+    linear-gradient(180deg, rgba(41, 90, 53, 0), rgba(38, 96, 55, 0.62) 28%, rgba(18, 55, 39, 0.95) 100%),
+    repeating-linear-gradient(88deg, rgba(255, 247, 232, 0.08) 0 1px, transparent 1px 44px);
+  border-radius: 50% 50% 0 0;
+}
+
+.sunflower {
+  --size: calc(104px * var(--s));
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--size);
+  height: calc(var(--size) * 1.95);
+  transform: translate(-50%, -50%) rotate(var(--r));
+  transform-origin: 50% 100%;
+}
+
+.sunflower--large {
+  --size: calc(126px * var(--s));
+}
+
+.sunflower--small {
+  --size: calc(86px * var(--s));
+}
+
+.sunflower::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 38%;
+  width: 9%;
+  height: 62%;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: linear-gradient(90deg, #245f3f, #3f9156 48%, #1f563b);
+  box-shadow: 0 0 0 1px rgba(255, 247, 232, 0.08);
+}
+
+.sunflower::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 35%;
+  width: 38%;
+  height: 13%;
+  transform: translateX(-50%) rotate(-24deg);
+  border-radius: 100% 12% 100% 12%;
+  background: linear-gradient(135deg, #2f7f4c, #57a760);
+  box-shadow: calc(var(--size) * 0.14) calc(var(--size) * 0.1) 0 -2px #2b7249;
+}
+
+.sunflower .petal,
+.sunflower .center {
+  display: none;
+}
+
+.sunflower {
+  background:
+    radial-gradient(circle at 50% 26%, #4a2e19 0 13%, #2b1a12 14% 19%, transparent 20%),
+    radial-gradient(ellipse at 50% 7%, #ffdf58 0 12%, transparent 13%),
+    radial-gradient(ellipse at 62% 9%, #f8b531 0 12%, transparent 13%),
+    radial-gradient(ellipse at 74% 17%, #ffdf58 0 12%, transparent 13%),
+    radial-gradient(ellipse at 80% 29%, #f8b531 0 12%, transparent 13%),
+    radial-gradient(ellipse at 72% 41%, #ffdf58 0 12%, transparent 13%),
+    radial-gradient(ellipse at 58% 48%, #f8b531 0 12%, transparent 13%),
+    radial-gradient(ellipse at 42% 48%, #ffdf58 0 12%, transparent 13%),
+    radial-gradient(ellipse at 28% 41%, #f8b531 0 12%, transparent 13%),
+    radial-gradient(ellipse at 20% 29%, #ffdf58 0 12%, transparent 13%),
+    radial-gradient(ellipse at 26% 17%, #f8b531 0 12%, transparent 13%),
+    radial-gradient(ellipse at 38% 9%, #ffdf58 0 12%, transparent 13%);
+  filter: drop-shadow(0 22px 28px rgba(0, 0, 0, 0.24));
+}
+
+.sunflower-message {
+  position: relative;
+  z-index: 3;
+  width: min(760px, 100%);
+  justify-self: center;
+  text-align: center;
+  padding: 2.1rem 2.3rem;
+  border: 1px solid rgba(255, 211, 110, 0.28);
+  border-radius: 24px;
+  background: rgba(35, 24, 55, 0.72);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.32);
+  backdrop-filter: blur(6px);
+}
+
+.sunflower-message h1 {
+  color: #fff4d6;
+  font-family: "Prata", serif;
+  font-size: clamp(2rem, 4.8vw, 4rem);
+  line-height: 1.12;
+  margin-bottom: 1rem;
+}
+
+.sunflower-message p:last-child {
+  color: var(--accent);
+  font-family: "Playfair Display", serif;
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  line-height: 1.65;
+}
+
 @media (max-width: 980px) {
   .birthday__layout {
     grid-template-columns: 1fr;
@@ -850,5 +986,25 @@ body::before {
     width: 100%;
     height: auto;
     max-height: calc(100vh - 5rem);
+  }
+
+  .sunflower-scene {
+    padding: 5.5rem 1rem 2rem;
+  }
+
+  .sunflower {
+    --size: calc(88px * var(--s));
+  }
+
+  .sunflower--large {
+    --size: calc(108px * var(--s));
+  }
+
+  .sunflower--small {
+    --size: calc(72px * var(--s));
+  }
+
+  .sunflower-message {
+    padding: 1.6rem 1.2rem;
   }
 }

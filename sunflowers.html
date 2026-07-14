@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sunflowers | Kyla Jane Hada-Ong</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Prata&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page sunflower-page">
+      <section class="sunflower-scene" aria-label="Sunflowers for Kyla Jane">
+        <div class="sunflower-scene__topbar">
+          <a class="editor-form__button editor-form__button--ghost" href="index.html">Back</a>
+        </div>
+
+        <div class="sunflower-field" aria-hidden="true">
+          <div class="sunflower sunflower--large" style="--x: 8%; --y: 56%; --s: 1.05; --r: -8deg"></div>
+          <div class="sunflower" style="--x: 18%; --y: 68%; --s: 0.82; --r: 8deg"></div>
+          <div class="sunflower sunflower--large" style="--x: 27%; --y: 50%; --s: 1.18; --r: 5deg"></div>
+          <div class="sunflower" style="--x: 39%; --y: 66%; --s: 0.9; --r: -6deg"></div>
+          <div class="sunflower sunflower--large" style="--x: 50%; --y: 47%; --s: 1.22; --r: 0deg"></div>
+          <div class="sunflower" style="--x: 61%; --y: 64%; --s: 0.88; --r: 7deg"></div>
+          <div class="sunflower sunflower--large" style="--x: 73%; --y: 52%; --s: 1.1; --r: -4deg"></div>
+          <div class="sunflower" style="--x: 85%; --y: 67%; --s: 0.86; --r: 9deg"></div>
+          <div class="sunflower sunflower--small" style="--x: 12%; --y: 82%; --s: 0.62; --r: 5deg"></div>
+          <div class="sunflower sunflower--small" style="--x: 32%; --y: 84%; --s: 0.7; --r: -7deg"></div>
+          <div class="sunflower sunflower--small" style="--x: 66%; --y: 83%; --s: 0.66; --r: 6deg"></div>
+          <div class="sunflower sunflower--small" style="--x: 91%; --y: 82%; --s: 0.64; --r: -8deg"></div>
+        </div>
+
+        <section class="sunflower-message">
+          <p class="panel__eyebrow">For Kyla Jane</p>
+          <h1>May your day bloom as brightly as every sunflower here.</h1>
+          <p>
+            These wishes were made with love, gathered from the people who care about you, and kept here as a little
+            golden garden for your birthday.
+          </p>
+        </section>
+      </section>
+    </main>
+
+    <script>
+      if (localStorage.getItem("forherjada_auth") !== "true") {
+        window.location.href = "login.html";
+      }
+    </script>
+  </body>
+</html>
