@@ -133,7 +133,8 @@ body {
 }
 
 .flower-stage .flower__leafs {
-  animation: none;
+  animation: flower-glow 4.8s ease-in-out infinite alternate;
+  will-change: filter;
 }
 
 .flower-stage .flower__leaf {
@@ -386,6 +387,15 @@ body {
   }
 }
 
+@keyframes flower-glow {
+  from {
+    filter: drop-shadow(0 0 0.8vmin rgba(255, 112, 174, 0.42)) drop-shadow(0 0 1.8vmin rgba(255, 182, 214, 0.2));
+  }
+  to {
+    filter: drop-shadow(0 0 1.5vmin rgba(255, 112, 174, 0.72)) drop-shadow(0 0 3.2vmin rgba(255, 182, 214, 0.38));
+  }
+}
+
 @keyframes stem-grow-from-bloom {
   from {
     opacity: 0;
@@ -501,5 +511,10 @@ body {
 
   .flower-stage .flower {
     animation-duration: 12s !important;
+  }
+
+  .flower-stage .flower__leafs {
+    animation: none !important;
+    filter: drop-shadow(0 0 1.2vmin rgba(255, 112, 174, 0.58)) drop-shadow(0 0 2.4vmin rgba(255, 182, 214, 0.3));
   }
 }
