@@ -10,10 +10,14 @@ body {
 }
 
 .flower-page {
+  position: relative;
   width: 100%;
   min-height: 100vh;
   overflow: hidden;
-  background: #000;
+  background:
+    radial-gradient(circle at 8% 58%, rgba(255, 105, 170, 0.07), transparent 22rem),
+    radial-gradient(circle at 92% 72%, rgba(41, 185, 132, 0.06), transparent 24rem),
+    #000;
 }
 
 .flower-page__back {
@@ -54,6 +58,83 @@ body {
   perspective: 1000px;
   background: #000;
 }
+
+/* Small supporting blooms fill the wide edges without competing with the bouquet. */
+.flower-stage__spray {
+  position: absolute;
+  bottom: 8%;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  gap: clamp(1rem, 3vw, 3.5rem);
+  width: min(24vw, 22rem);
+  height: 42%;
+  opacity: 0.62;
+  pointer-events: none;
+}
+
+.flower-stage__spray::before,
+.flower-stage__spray::after {
+  content: "";
+  position: absolute;
+  bottom: -12%;
+  width: 1.1rem;
+  height: 82%;
+  border-radius: 100% 0;
+  border-left: 2px solid rgba(56, 173, 103, 0.58);
+  transform: rotate(-18deg);
+  filter: drop-shadow(0 0 8px rgba(42, 177, 109, 0.3));
+}
+
+.flower-stage__spray::after {
+  left: 44%;
+  height: 62%;
+  transform: rotate(22deg) scaleX(-1);
+}
+
+.flower-stage__spray--left {
+  left: 4%;
+  transform: rotate(-8deg);
+}
+
+.flower-stage__spray--right {
+  right: 4%;
+  justify-content: flex-end;
+  transform: scaleX(-1) rotate(-8deg);
+}
+
+.flower-stage__spray .mini-flower:nth-child(1) { align-self: center; }
+.flower-stage__spray .mini-flower:nth-child(2) { align-self: flex-start; }
+.flower-stage__spray .mini-flower:nth-child(3) { align-self: flex-end; margin-bottom: 24%; }
+
+.mini-flower {
+  --mini-size: 2.6rem;
+  position: relative;
+  z-index: 1;
+  display: block;
+  flex: 0 0 var(--mini-size);
+  width: var(--mini-size);
+  height: var(--mini-size);
+  border-radius: 50%;
+  background: radial-gradient(circle, #f7bd54 0 13%, #fff2f7 14% 25%, transparent 27%);
+  filter: drop-shadow(0 0 0.75rem rgba(255, 115, 173, 0.6));
+}
+
+.mini-flower::before {
+  content: "";
+  position: absolute;
+  inset: -18%;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse at 50% 15%, #ffd9e8 0 16%, #e66b9e 18% 27%, transparent 29%),
+    radial-gradient(ellipse at 84% 39%, #ffd9e8 0 16%, #e66b9e 18% 27%, transparent 29%),
+    radial-gradient(ellipse at 71% 82%, #ffd9e8 0 16%, #e66b9e 18% 27%, transparent 29%),
+    radial-gradient(ellipse at 29% 82%, #ffd9e8 0 16%, #e66b9e 18% 27%, transparent 29%),
+    radial-gradient(ellipse at 16% 39%, #ffd9e8 0 16%, #e66b9e 18% 27%, transparent 29%);
+}
+
+.mini-flower--small { --mini-size: 1.65rem; opacity: 0.82; }
+.mini-flower--large { --mini-size: 3.45rem; }
 
 .flower-stage .night {
   position: absolute;
@@ -312,15 +393,74 @@ body {
 }
 
 .flower-page__message {
+  position: relative;
+  isolation: isolate;
   width: min(900px, calc(100% - 2rem));
   margin: 1.75rem auto 4rem;
-  padding: 2.25rem 2rem;
-  border: 1px solid rgba(107, 240, 255, 0.25);
-  border-radius: 8px;
-  background: #00110f;
-  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
+  padding: 3rem 3.5rem 2.6rem;
+  border: 1px solid rgba(255, 192, 217, 0.32);
+  border-radius: 22px 8px 22px 8px;
+  background:
+    linear-gradient(135deg, rgba(255, 199, 221, 0.06), transparent 30%),
+    linear-gradient(315deg, rgba(54, 190, 139, 0.08), transparent 34%),
+    #00110f;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55), inset 0 0 40px rgba(255, 173, 205, 0.025);
   text-align: center;
 }
+
+.flower-page__message::before {
+  content: "";
+  position: absolute;
+  inset: 0.65rem;
+  z-index: -1;
+  border: 1px solid rgba(107, 240, 181, 0.11);
+  border-radius: 16px 5px 16px 5px;
+  pointer-events: none;
+}
+
+.message-floral {
+  position: absolute;
+  z-index: -1;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  width: 10rem;
+  height: 7rem;
+  pointer-events: none;
+}
+
+.message-floral::before,
+.message-floral::after {
+  content: "";
+  position: absolute;
+  width: 6rem;
+  height: 2.1rem;
+  border-radius: 100% 0;
+  background: linear-gradient(135deg, rgba(64, 174, 109, 0.72), rgba(13, 82, 59, 0.18));
+  transform: rotate(-28deg);
+}
+
+.message-floral::after {
+  width: 4.6rem;
+  transform: translate(3.8rem, 1.7rem) rotate(18deg) scaleX(-1);
+}
+
+.message-floral--top {
+  top: -2rem;
+  left: -1.2rem;
+  transform: rotate(-8deg);
+}
+
+.message-floral--bottom {
+  right: -1.2rem;
+  bottom: -2rem;
+  transform: rotate(172deg);
+}
+
+.message-floral .mini-flower { position: absolute; }
+.message-floral .mini-flower:nth-child(1) { left: 0.4rem; top: 2.6rem; }
+.message-floral .mini-flower:nth-child(2) { left: 3.1rem; top: 0.45rem; }
+.message-floral .mini-flower:nth-child(3) { left: 6.3rem; top: 3.5rem; }
 
 .flower-page__eyebrow {
   margin: 0 0 0.8rem;
@@ -495,24 +635,83 @@ body {
 
 @media (max-width: 720px) {
   .flower-stage {
-    height: 72svh;
-    min-height: 520px;
+    height: clamp(420px, 61svh, 570px);
+    min-height: 420px;
   }
 
   .flower-stage .flowers {
-    transform: scale(0.68);
+    transform: scale(0.78);
+  }
+
+  .flower-stage__spray {
+    bottom: 1%;
+    width: 28vw;
+    height: 34%;
+    gap: 0.45rem;
+    opacity: 0.72;
+  }
+
+  .flower-stage__spray--left { left: -1.5rem; }
+  .flower-stage__spray--right { right: -1.5rem; }
+
+  .flower-stage__spray .mini-flower { --mini-size: 2rem; }
+  .flower-stage__spray .mini-flower--small { --mini-size: 1.3rem; }
+  .flower-stage__spray .mini-flower--large { --mini-size: 2.65rem; }
+
+  .flower-page__back {
+    top: 0.75rem;
+    left: 0.75rem;
+    min-height: 2.5rem;
   }
 
   .flower-page__message {
-    width: calc(100vw - 2rem);
-    max-width: calc(100vw - 2rem);
-    margin-top: 1rem;
-    padding: 1.75rem 1.15rem;
+    width: calc(100vw - 1.25rem);
+    max-width: calc(100vw - 1.25rem);
+    margin: 0.25rem auto 2.5rem;
+    padding: 2.8rem 1.25rem 2.35rem;
+    border-radius: 18px 7px 18px 7px;
   }
 
   .flower-page__greeting {
     font-size: clamp(1.6rem, 7vw, 2.1rem);
     overflow-wrap: anywhere;
+  }
+
+  .flower-page__letter {
+    font-size: 0.96rem;
+    line-height: 1.68;
+  }
+
+  .message-floral {
+    transform: scale(0.78) rotate(-8deg);
+  }
+
+  .message-floral--top {
+    top: -2.2rem;
+    left: -1.5rem;
+  }
+
+  .message-floral--bottom {
+    right: -1.5rem;
+    bottom: -2.2rem;
+    transform: scale(0.78) rotate(172deg);
+  }
+}
+
+@media (max-width: 390px) {
+  .flower-stage {
+    height: 56svh;
+    min-height: 390px;
+  }
+
+  .flower-stage .flowers {
+    transform: scale(0.7);
+  }
+
+  .flower-page__message {
+    width: calc(100vw - 0.9rem);
+    max-width: calc(100vw - 0.9rem);
+    padding-inline: 1rem;
   }
 }
 
