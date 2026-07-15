@@ -123,38 +123,52 @@ body {
 
 .flower-stage .flower__line {
   background-image: linear-gradient(to left, rgba(0, 0, 0, 0.2), transparent, rgba(255, 255, 255, 0.18)), linear-gradient(to top, transparent 10%, #176a45, #42a966);
-  animation-duration: 6.8s;
-  animation-timing-function: cubic-bezier(0.2, 0.62, 0.28, 1);
+  transform-origin: top center;
+  animation: stem-grow-from-bloom 4.8s cubic-bezier(0.2, 0.62, 0.28, 1) calc(var(--flower-grow-delay, 0s) + 2.1s) both;
 }
 
 .flower-stage .flower__line__leaf {
   background-image: linear-gradient(to top, rgba(21, 91, 58, 0.5), #45ad69);
+  animation: stem-leaf-reveal 1.6s ease-out calc(var(--flower-grow-delay, 0s) + 4s) both;
 }
 
 .flower-stage .flower__leafs {
-  animation-duration: 3.4s;
-  animation-timing-function: cubic-bezier(0.16, 0.72, 0.2, 1);
+  animation: none;
 }
 
-.flower-stage .flower__leafs--1 { animation-delay: 4.4s; }
-.flower-stage .flower__leafs--2 { animation-delay: 4.8s; }
-.flower-stage .flower__leafs--3 { animation-delay: 5.2s; }
+.flower-stage .flower__leaf {
+  animation: petal-unfold 1.9s cubic-bezier(0.16, 0.72, 0.2, 1) calc(var(--flower-grow-delay, 0s) + var(--petal-delay, 0s)) both;
+}
 
-.flower-stage .flower--1 .flower__line { animation-delay: 0.2s; }
-.flower-stage .flower--2 .flower__line { animation-delay: 0.55s; }
-.flower-stage .flower--3 .flower__line { animation-delay: 0.9s; }
+.flower-stage .flower__leaf--1 { --petal-delay: 0s; }
+.flower-stage .flower__leaf--2 { --petal-delay: 0.18s; }
+.flower-stage .flower__leaf--3 { --petal-delay: 0.36s; }
+.flower-stage .flower__leaf--4 { --petal-delay: 0.54s; }
 
-/* The garden settles into a slow breeze after its bottom-to-top reveal. */
+.flower-stage .flower__white-circle {
+  animation: flower-center-reveal 1.2s ease-out calc(var(--flower-grow-delay, 0s) + 1.35s) both;
+}
+
+.flower-stage .flower__line__leaf:nth-child(2),
+.flower-stage .flower__line__leaf:nth-child(4),
+.flower-stage .flower__line__leaf:nth-child(6) {
+  animation-delay: calc(var(--flower-grow-delay, 0s) + 4.35s);
+}
+
+/* Each flower opens in sequence, then the completed bouquet begins to sway. */
 .flower-stage .flower--1 {
-  animation: pink-flower-sway-1 6.4s ease-in-out 8.6s infinite alternate;
+  --flower-grow-delay: 0s;
+  animation: pink-flower-sway-1 6.4s ease-in-out 10.8s infinite alternate;
 }
 
 .flower-stage .flower--2 {
-  animation: pink-flower-sway-2 7.2s ease-in-out 8.9s infinite alternate;
+  --flower-grow-delay: 0.6s;
+  animation: pink-flower-sway-2 7.2s ease-in-out 11.1s infinite alternate;
 }
 
 .flower-stage .flower--3 {
-  animation: pink-flower-sway-3 6.8s ease-in-out 9.2s infinite alternate;
+  --flower-grow-delay: 1.2s;
+  animation: pink-flower-sway-3 6.8s ease-in-out 11.4s infinite alternate;
 }
 
 /* Seven extra stems turn the original trio into a layered bouquet. */
@@ -172,65 +186,72 @@ body {
 }
 
 .flower-stage .flower--4 {
+  --flower-grow-delay: 0.3s;
   --stem-left: -1vmin;
   --stem-angle-a: -55deg;
   --stem-angle-b: -48deg;
   --sway-time: 7.6s;
-  --sway-delay: 9s;
+  --sway-delay: 11s;
   --stem-layer: 6;
 }
 
 .flower-stage .flower--5 {
+  --flower-grow-delay: 0.9s;
   --stem-left: -1vmin;
   --stem-angle-a: -41deg;
   --stem-angle-b: -34deg;
   --sway-time: 6.9s;
-  --sway-delay: 8.8s;
+  --sway-delay: 11.3s;
   --stem-layer: 8;
 }
 
 .flower-stage .flower--6 {
+  --flower-grow-delay: 1.5s;
   --stem-left: 0;
   --stem-angle-a: -33deg;
   --stem-angle-b: -25.5deg;
   --sway-time: 7.8s;
-  --sway-delay: 9.1s;
+  --sway-delay: 11.6s;
   --stem-layer: 7;
 }
 
 .flower-stage .flower--7 {
+  --flower-grow-delay: 1.8s;
   --stem-left: 0;
   --stem-angle-a: 34deg;
   --stem-angle-b: 26deg;
   --sway-time: 7.1s;
-  --sway-delay: 8.7s;
+  --sway-delay: 11.8s;
   --stem-layer: 9;
 }
 
 .flower-stage .flower--8 {
+  --flower-grow-delay: 1.1s;
   --stem-left: 1vmin;
   --stem-angle-a: 45deg;
   --stem-angle-b: 36deg;
   --sway-time: 8s;
-  --sway-delay: 9s;
+  --sway-delay: 11.4s;
   --stem-layer: 7;
 }
 
 .flower-stage .flower--9 {
+  --flower-grow-delay: 0.5s;
   --stem-left: 1vmin;
   --stem-angle-a: 59deg;
   --stem-angle-b: 50deg;
   --sway-time: 7.4s;
-  --sway-delay: 9.3s;
+  --sway-delay: 11.1s;
   --stem-layer: 6;
 }
 
 .flower-stage .flower--10 {
+  --flower-grow-delay: 2.1s;
   --stem-left: 0;
   --stem-angle-a: -4deg;
   --stem-angle-b: 4deg;
   --sway-time: 6.7s;
-  --sway-delay: 9.4s;
+  --sway-delay: 12s;
   --stem-layer: 11;
 }
 
@@ -242,63 +263,51 @@ body {
 .flower-stage .flower--9 .flower__line { height: 39vmin; }
 .flower-stage .flower--10 .flower__line { height: 42vmin; }
 
-.flower-stage .flower--4 .flower__line { animation-delay: 0.35s; }
-.flower-stage .flower--5 .flower__line { animation-delay: 0.7s; }
-.flower-stage .flower--6 .flower__line { animation-delay: 1.05s; }
-.flower-stage .flower--7 .flower__line { animation-delay: 0.85s; }
-.flower-stage .flower--8 .flower__line { animation-delay: 0.6s; }
-.flower-stage .flower--9 .flower__line { animation-delay: 0.4s; }
-.flower-stage .flower--10 .flower__line { animation-delay: 1.2s; }
-
 .flower-stage .flower--4 .flower__leafs,
 .flower-stage .flower--9 .flower__leafs {
   transform: scale(0.7);
-  animation-delay: 5.6s;
 }
 
 .flower-stage .flower--5 .flower__leafs,
 .flower-stage .flower--8 .flower__leafs {
   transform: scale(0.82);
-  animation-delay: 5.1s;
 }
 
 .flower-stage .flower--6 .flower__leafs,
 .flower-stage .flower--7 .flower__leafs {
   transform: scale(0.9);
-  animation-delay: 5.35s;
 }
 
 .flower-stage .flower--10 .flower__leafs {
   transform: scale(0.76);
-  animation-delay: 5.9s;
 }
 
 .flower-stage .flower__grass--1 {
-  animation: pink-grass-sway-1 11s ease-in-out 8s infinite alternate;
+  animation: pink-grass-sway-1 11s ease-in-out 11s infinite alternate;
 }
 
 .flower-stage .flower__grass--2 {
-  animation: pink-grass-sway-2 12.5s ease-in-out 8.4s infinite alternate;
+  animation: pink-grass-sway-2 12.5s ease-in-out 11.3s infinite alternate;
 }
 
 .flower-stage .flower__g-long {
-  animation: pink-long-sway 13s ease-in-out 8.2s infinite alternate;
+  animation: pink-long-sway 13s ease-in-out 11.2s infinite alternate;
 }
 
 .flower-stage .flower__g-right--1 {
-  animation: pink-right-sway-1 12s ease-in-out 8.5s infinite alternate;
+  animation: pink-right-sway-1 12s ease-in-out 11.5s infinite alternate;
 }
 
 .flower-stage .flower__g-right--2 {
-  animation: pink-right-sway-2 14s ease-in-out 8.8s infinite alternate;
+  animation: pink-right-sway-2 14s ease-in-out 11.8s infinite alternate;
 }
 
 .flower-stage .flower__g-front {
-  animation: pink-front-sway 13.5s ease-in-out 8.6s infinite alternate;
+  animation: pink-front-sway 13.5s ease-in-out 11.6s infinite alternate;
 }
 
 .flower-stage .flower__g-fr {
-  animation: pink-fr-sway 11.5s ease-in-out 8.9s infinite alternate;
+  animation: pink-fr-sway 11.5s ease-in-out 11.9s infinite alternate;
 }
 
 .flower-page__message {
@@ -341,6 +350,52 @@ body {
   }
   to {
     opacity: 1;
+  }
+}
+
+@keyframes petal-unfold {
+  from {
+    opacity: 0;
+    clip-path: inset(100% 0 0 0);
+    filter: brightness(0.7);
+  }
+  to {
+    opacity: 0.9;
+    clip-path: inset(0 0 0 0);
+    filter: brightness(1);
+  }
+}
+
+@keyframes flower-center-reveal {
+  from {
+    opacity: 0;
+    clip-path: circle(0 at 50% 50%);
+  }
+  to {
+    opacity: 1;
+    clip-path: circle(75% at 50% 50%);
+  }
+}
+
+@keyframes stem-grow-from-bloom {
+  from {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+@keyframes stem-leaf-reveal {
+  from {
+    opacity: 0;
+    clip-path: inset(100% 0 0 0);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
   }
 }
 
@@ -423,11 +478,6 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .flower-stage * {
-    animation-duration: 1ms !important;
-    animation-delay: 0ms !important;
-  }
-
   .flower-garden,
   .flower-stage .flower__grass--1,
   .flower-stage .flower__grass--2,
@@ -442,6 +492,5 @@ body {
 
   .flower-stage .flower {
     animation-duration: 12s !important;
-    animation-delay: 0s !important;
   }
 }
