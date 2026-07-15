@@ -172,14 +172,22 @@ body {
   animation: pink-flower-sway-3 6.8s ease-in-out 11.4s infinite alternate;
 }
 
-/* Seven extra stems turn the original trio into a layered bouquet. */
+/* Fifteen extra stems turn the original trio into a full, layered bouquet. */
 .flower-stage .flower--4,
 .flower-stage .flower--5,
 .flower-stage .flower--6,
 .flower-stage .flower--7,
 .flower-stage .flower--8,
 .flower-stage .flower--9,
-.flower-stage .flower--10 {
+.flower-stage .flower--10,
+.flower-stage .flower--11,
+.flower-stage .flower--12,
+.flower-stage .flower--13,
+.flower-stage .flower--14,
+.flower-stage .flower--15,
+.flower-stage .flower--16,
+.flower-stage .flower--17,
+.flower-stage .flower--18 {
   left: var(--stem-left);
   z-index: var(--stem-layer, 8);
   transform: rotate(var(--stem-angle-a));
@@ -256,6 +264,87 @@ body {
   --stem-layer: 11;
 }
 
+/* A second arc of smaller blooms fills the outside and lower gaps. */
+.flower-stage .flower--11 {
+  --flower-grow-delay: 1.4s;
+  --stem-left: -2vmin;
+  --stem-angle-a: -74deg;
+  --stem-angle-b: -68deg;
+  --sway-time: 8.2s;
+  --sway-delay: 11.7s;
+  --stem-layer: 4;
+}
+
+.flower-stage .flower--12 {
+  --flower-grow-delay: 0.7s;
+  --stem-left: -1.5vmin;
+  --stem-angle-a: -64deg;
+  --stem-angle-b: -58deg;
+  --sway-time: 7.7s;
+  --sway-delay: 11.2s;
+  --stem-layer: 5;
+}
+
+.flower-stage .flower--13 {
+  --flower-grow-delay: 1.9s;
+  --stem-left: -0.8vmin;
+  --stem-angle-a: -48deg;
+  --stem-angle-b: -42deg;
+  --sway-time: 8.4s;
+  --sway-delay: 11.9s;
+  --stem-layer: 5;
+}
+
+.flower-stage .flower--14 {
+  --flower-grow-delay: 1.1s;
+  --stem-left: -0.3vmin;
+  --stem-angle-a: -24deg;
+  --stem-angle-b: -18deg;
+  --sway-time: 7.3s;
+  --sway-delay: 11.4s;
+  --stem-layer: 6;
+}
+
+.flower-stage .flower--15 {
+  --flower-grow-delay: 1.6s;
+  --stem-left: 0.3vmin;
+  --stem-angle-a: 22deg;
+  --stem-angle-b: 16deg;
+  --sway-time: 7.9s;
+  --sway-delay: 11.7s;
+  --stem-layer: 6;
+}
+
+.flower-stage .flower--16 {
+  --flower-grow-delay: 0.8s;
+  --stem-left: 0.8vmin;
+  --stem-angle-a: 50deg;
+  --stem-angle-b: 43deg;
+  --sway-time: 8.1s;
+  --sway-delay: 11.3s;
+  --stem-layer: 5;
+}
+
+.flower-stage .flower--17 {
+  --flower-grow-delay: 2s;
+  --stem-left: 1.5vmin;
+  --stem-angle-a: 65deg;
+  --stem-angle-b: 58deg;
+  --sway-time: 7.5s;
+  --sway-delay: 12s;
+  --stem-layer: 5;
+}
+
+.flower-stage .flower--18 {
+  --flower-grow-delay: 1.3s;
+  --stem-left: 2vmin;
+  --stem-angle-a: 76deg;
+  --stem-angle-b: 69deg;
+  --sway-time: 8.3s;
+  --sway-delay: 11.6s;
+  --stem-layer: 4;
+}
+
 .flower-stage .flower--4 .flower__line { height: 39vmin; }
 .flower-stage .flower--5 .flower__line { height: 47vmin; }
 .flower-stage .flower--6 .flower__line { height: 52vmin; }
@@ -263,6 +352,14 @@ body {
 .flower-stage .flower--8 .flower__line { height: 47vmin; }
 .flower-stage .flower--9 .flower__line { height: 39vmin; }
 .flower-stage .flower--10 .flower__line { height: 42vmin; }
+.flower-stage .flower--11 .flower__line { height: 34vmin; }
+.flower-stage .flower--12 .flower__line { height: 43vmin; }
+.flower-stage .flower--13 .flower__line { height: 51vmin; }
+.flower-stage .flower--14 .flower__line { height: 45vmin; }
+.flower-stage .flower--15 .flower__line { height: 44vmin; }
+.flower-stage .flower--16 .flower__line { height: 50vmin; }
+.flower-stage .flower--17 .flower__line { height: 42vmin; }
+.flower-stage .flower--18 .flower__line { height: 34vmin; }
 
 .flower-stage .flower--4 .flower__leafs,
 .flower-stage .flower--9 .flower__leafs {
@@ -281,6 +378,26 @@ body {
 
 .flower-stage .flower--10 .flower__leafs {
   transform: scale(0.76);
+}
+
+.flower-stage .flower--11 .flower__leafs,
+.flower-stage .flower--18 .flower__leafs {
+  transform: scale(0.56);
+}
+
+.flower-stage .flower--12 .flower__leafs,
+.flower-stage .flower--17 .flower__leafs {
+  transform: scale(0.64);
+}
+
+.flower-stage .flower--13 .flower__leafs,
+.flower-stage .flower--16 .flower__leafs {
+  transform: scale(0.72);
+}
+
+.flower-stage .flower--14 .flower__leafs,
+.flower-stage .flower--15 .flower__leafs {
+  transform: scale(0.68);
 }
 
 .flower-stage .flower__grass--1 {
@@ -495,12 +612,12 @@ body {
 
 @media (max-width: 720px) {
   .flower-stage {
-    height: 72svh;
-    min-height: 520px;
+    height: clamp(420px, 54svh, 480px);
+    min-height: 420px;
   }
 
   .flower-stage .flowers {
-    transform: scale(0.68);
+    transform: scale(0.8);
   }
 
   .flower-page__message {
