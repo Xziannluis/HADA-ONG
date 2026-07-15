@@ -350,7 +350,8 @@
       function buildBouquet() {
         const flowers = document.querySelector(".flowers");
         const firstFlower = flowers && flowers.querySelector(".flower--1");
-        const totalFlowers = 100;
+        const totalFlowers = 50;
+        const fieldFlowerCount = totalFlowers - 18;
 
         if (!flowers || !firstFlower || flowers.querySelector(".flower--4")) {
           return;
@@ -369,7 +370,7 @@
 
           if (number > 18) {
             const index = number - 19;
-            const position = ((index * 37) % 82) / 81;
+            const position = ((index * 13) % fieldFlowerCount) / (fieldFlowerCount - 1);
             const heightStep = (index * 17) % 33;
             const sizeStep = (index * 11) % 10;
             const angleStep = (index * 7) % 17;
