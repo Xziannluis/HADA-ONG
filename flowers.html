@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Prata&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="flower-blooming.css?v=15">
-    <link rel="stylesheet" href="flower-page.css?v=16">
+    <link rel="stylesheet" href="flower-page.css?v=17">
 </head>
     
 <body>
@@ -350,19 +350,44 @@
       function buildBouquet() {
         const flowers = document.querySelector(".flowers");
         const firstFlower = flowers && flowers.querySelector(".flower--1");
+        const totalFlowers = 100;
 
         if (!flowers || !firstFlower || flowers.querySelector(".flower--4")) {
           return;
         }
 
-        for (let number = 4; number <= 18; number += 1) {
+        for (let number = 4; number <= totalFlowers; number += 1) {
           const flower = firstFlower.cloneNode(true);
           const leafs = flower.querySelector(".flower__leafs");
 
           flower.className = `flower flower--${number}`;
+          flower.querySelectorAll(".flower__light").forEach((light) => light.remove());
+
           if (leafs) {
             leafs.className = "flower__leafs";
           }
+
+          if (number > 18) {
+            const index = number - 19;
+            const position = ((index * 37) % 82) / 81;
+            const heightStep = (index * 17) % 33;
+            const sizeStep = (index * 11) % 10;
+            const angleStep = (index * 7) % 17;
+
+            flower.classList.add("flower--field");
+            flower.style.setProperty("--stem-left", `${-49 + position * 98}vw`);
+            flower.style.setProperty("--stem-bottom", `${4 + ((index * 5) % 8)}vmin`);
+            flower.style.setProperty("--stem-height", `${22 + heightStep}vmin`);
+            flower.style.setProperty("--bloom-scale", `${0.34 + sizeStep * 0.035}`);
+            flower.style.setProperty("--stem-angle-a", `${-8 + angleStep}deg`);
+            flower.style.setProperty("--stem-angle-b", `${-5 + angleStep}deg`);
+            flower.style.setProperty("--flower-opacity", `${0.58 + (index % 5) * 0.08}`);
+            flower.style.setProperty("--flower-grow-delay", `${(index % 16) * 0.16}s`);
+            flower.style.setProperty("--sway-time", `${6.8 + (index % 7) * 0.45}s`);
+            flower.style.setProperty("--sway-delay", `${10.9 + (index % 9) * 0.13}s`);
+            flower.style.setProperty("--stem-layer", `${1 + (index % 4)}`);
+          }
+
           flowers.appendChild(flower);
         }
       }

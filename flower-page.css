@@ -400,6 +400,35 @@ body {
   transform: scale(0.68);
 }
 
+/* The remaining blooms form a lightweight, screen-wide meadow behind the bouquet. */
+.flower-stage .flower--field {
+  left: var(--stem-left);
+  bottom: var(--stem-bottom);
+  z-index: var(--stem-layer);
+  opacity: var(--flower-opacity);
+  transform: rotate(var(--stem-angle-a));
+  animation: pink-bouquet-sway var(--sway-time) ease-in-out var(--sway-delay) infinite alternate;
+}
+
+.flower-stage .flower--field .flower__line {
+  height: var(--stem-height);
+}
+
+.flower-stage .flower--field .flower__leafs {
+  transform: scale(var(--bloom-scale));
+  animation: none;
+  filter: drop-shadow(0 0 1vmin rgba(255, 112, 174, 0.5));
+  will-change: auto;
+}
+
+.flower-stage .flower--field .flower__line__leaf {
+  scale: calc(var(--bloom-scale) + 0.12);
+}
+
+.flower-stage .flower--field .flower__line__leaf:nth-child(n + 5) {
+  display: none;
+}
+
 .flower-stage .flower__grass--1 {
   animation: pink-grass-sway-1 11s ease-in-out 11s infinite alternate;
 }
